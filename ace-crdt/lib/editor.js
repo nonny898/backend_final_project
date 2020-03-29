@@ -36,7 +36,10 @@ function joinSession(path){
     rga = new RGA.AceEditorRGA(id, editor)
     rga.subscribe(op => { socket.emit('message', op) })
   
-    socket.on('message', op => { rga.receive(op) })
+    socket.on('message', op => { 
+      rga.receive(op)
+      console.log("Got message")
+     })
   
     socket.emit('message', { type: 'historyRequest' })
   });
