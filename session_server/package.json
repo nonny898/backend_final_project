@@ -2,8 +2,16 @@
     "name": "session-socket-server",
     "version": "0.0.1",
     "description": "Socket.io Server for collaborative editing",
+    "scripts": {
+        "dev": "nodemon index.js"
+    },
     "dependencies": {
+        "ace-builds": "^1.2.6",
         "express": "^4.17.1",
-        "socket.io": "^2.3.0"
+        "socket.io": "^2.3.0",
+        "uuid": "^7.0.2"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.2"
     }
 }

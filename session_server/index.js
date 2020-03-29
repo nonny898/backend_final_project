@@ -1,6 +1,12 @@
-const app = require('express')
+const express = require('express')
+const app = express()
 const http = require('http').createServer(app);
+
 const io = require('socket.io')(http);
+app.use(express.static('lib'))
+app.use(express.static('node_modules/ace-builds/src-noconflict'))
+const { v4: uuidv4 } = require('uuid');
+
 
 const connectedClients = new Map;
 
@@ -41,7 +47,24 @@ var deleteSession = function(path,session){
     delete io.nsps[path]
 }
 
-createSession('/test')
+// random session id when visiting / start from
+app.get('/', (req, res) => {
+    res.redirect('/'+ uuidv4())
+})
+
+app.get('/namespaces', (req,res) => {
+    // Debugging purpose
+    // getAllnamespace now 
+    res.json({namespaces: Object.keys(io.nsps)})
+})
+app.get("/:namespace", (req,res) => {
+    // Basically if you type :3000/anythinghere
+    // anythinghere will be the new namespace
+    createSession('/'+req.params.namespace)
+    console.log('new namespace created')
+    res.sendFile(__dirname + '/index.html');
+})
+
 
 http.listen(3000,function() {
     console.log("Listening on *:3000");
