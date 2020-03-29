@@ -4,12 +4,18 @@ import axios from 'axios';
 import Login from '../views/Login.vue';
 import Logout from '../views/Logout.vue';
 import Main from '../views/Main.vue';
+import Editor from '../views/Editor.vue'
 
 Vue.use(Router);
 
 const router = new Router({
   mode: 'history',
   routes: [
+    {
+      path: '/editor',
+      name: 'Editor',
+      component: Editor
+    },
     {
       path: '/login',
       name: 'Login',
