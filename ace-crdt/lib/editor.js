@@ -27,9 +27,10 @@ var createSession = function() {
 
 function joinSession(path){
   if(socket != null){
+    socket.removeAllListeners()
     socket.disconnect()
   }
-  socket = io('ws://localhost:3000' + path)
+  socket = io('ws://localhost:3000/' + path)
   console.log("Connecting to session " + path)
   socket.on('init', ({ id, history }) => {
     editor.setWrapBehavioursEnabled(false)
@@ -42,22 +43,24 @@ function joinSession(path){
      })
   
     socket.emit('message', { type: 'historyRequest' })
+    editor.focus()
   });
 }
 
 function opensocket(url){
   console.log("Got reply for socket session " + url)
-  socket = io('ws://localhost:3000' + url)
+  socket = io('ws://localhost:3000/' + url)
   socket.on('init', ({ id, history }) => {
     if (!rga) {
       editor.setWrapBehavioursEnabled(false)
-      rga = new RGA.AceEditorRGA(id, editor)
+      rga = new RGA.AceEditorRGA('host', editor)
     }
     rga.subscribe(op => { socket.emit('message', op) })
   
     socket.on('message', op => { rga.receive(op) })
   
     socket.emit('message', { type: 'historyRequest' })
+    editor.focus()
   });
 }
 editor.focus()
