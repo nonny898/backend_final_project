@@ -1,0 +1,28 @@
+{
+  "name": "ace-crdt",
+  "version": "0.0.1",
+  "description": "Colaborative text editor proof of concept using CRDT (heavily based on jorendorff/peeredit)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nonny898/backend_final_project"
+  },
+  "keywords": [
+    "CRDT",
+    "RGA",
+    "Ace",
+    "Texteditor",
+    "Collaborative"
+  ],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "ace-builds": "^1.2.6",
+    "express": "^4.15.3",
+    "socket.io-redis": "^5.2.0",
+    "socketio": "^1.0.0"
+  }
+}
