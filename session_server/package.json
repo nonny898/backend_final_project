@@ -1,0 +1,9 @@
+{
+    "name": "session-socket-server",
+    "version": "0.0.1",
+    "description": "Socket.io Server for collaborative editing",
+    "dependencies": {
+        "express": "^4.17.1",
+        "socket.io": "^2.3.0"
+    }
+}
