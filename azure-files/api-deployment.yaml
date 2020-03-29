@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: api
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: api
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: api
+    spec:
+      containers:
+        - image: mapringg/upload-download-express:latest
+          imagePullPolicy: ""
+          name: api
+          volumeMounts:
+            - name: azurefileshare
+              mountPath: /home/node/code/uploads
+          ports:
+            - containerPort: 3000
+          resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+        - name: azurefileshare
+          azureFile:
+            secretName: azure-secret
+            shareName: files-k8s
+            readOnly: false
+status: {}
