@@ -14,7 +14,10 @@ const router = new Router({
     {
       path: '/editor',
       name: 'Editor',
-      component: Editor
+      component: Editor,
+      meta: {
+      requiresAuth: true,
+      }
     },
     {
       path: '/login',
