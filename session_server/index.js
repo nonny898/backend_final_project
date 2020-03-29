@@ -1,10 +1,18 @@
 const app = require('express')()
+var config = require('./config')
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const {v4: uuidv4} = require('uuid')
 const cors = require('cors');
+const redis = require('redis')
+const redisAdapter = require('socket.io-redis')
+// console.log("Redis host env variable: " + config.REDIS_HOST)
+const client = redis.createClient({host: config.REDIS_HOST, port: 6379})
 
-const connectedClients = new Map;
+io.adapter(redisAdapter({host: config.REDIS_HOST, port: 6379}))
+client.on("error", function(error) {
+    console.error(error);
+  });
 
 app.use(
     cors({
@@ -14,47 +22,61 @@ app.use(
     })
   );
 
-let nextUserId = 1
+function statusKey(session){
+    return session + '-active'
+}
 
-var createSession = function(path){
-    let ses = io.of('/' + path)
-    connectedClients.set(path,0)
-    ses.on('connection',function(socket){
-        // console.log("Someone connected to test");
-        connectedClients.set(path,connectedClients.get(path) + 1);
-        console.log(connectedClients.get(path) + " connected to " + path);
-        socket.on('disconnect',function(){
-            disconnectSession(path,ses)
-        })
-        var userId = nextUserId++;
+//TODO If server goes down then session never closes as socket.io reconnects and bumps up connected
+// clients number. If server goes down disconnect function is never called. Consider replacing with
+// a heartbeat function to check number of connected clients
 
-        console.log('connection - assigning id ' + userId);
+io.on('connect', function(socket) {
+    let session = socket.handshake.query['session']
+    // console.log(socket.handshake.query)
+    client.get(statusKey(session), function(err, value) {
+        if(value !== 'true')
+            socket.disconnect()
+        else{
+            socket.join(session)
+            client.incr('id',function(err,nextid){
+                socket.emit('init', {id: nextid})
+                socket.on('message', op => {
+                    socket.broadcast.to(session).emit('message',op)
+                })
+            })
+            client.incr(session,function(err,connected){
+                console.log(session + ' has ' + connected + ' connections')
+            })
+            socket.on('disconnect',function() {
+                disconnectSession(session)
+            })
+        }
+    })
+})
 
-        socket.emit('init', { id: userId })
+var createSession = function(path,callback){
+    client.set(path,0)
+    client.set(statusKey(path),'true',callback)
+}
 
-        socket.on('message', op => { socket.broadcast.emit('message', op) })
+var disconnectSession = function(path){
+    // console.log('Someone disconnected from test')
+    client.decr(path, function(err, connected) {
+        console.log(connected + ' clients connected to ' + path)
+        if(connected == 0){
+            deleteSession(path)
+        }
     })
 }
 
-var disconnectSession = function(path, namespace){
-    // console.log('Someone disconnected from test')
-    connectedClients.set(path,connectedClients.get(path)-1)
-    console.log(connectedClients.get(path) + ' clients connected to ' + path)
-    if(connectedClients.get(path) == 0){
-        deleteSession(path,namespace)
-    }
-}
-
-var deleteSession = function(path,session){
-    console.log("Deleting namespace " + path)
-    session.removeAllListeners();
-    delete io.nsps[path]
+var deleteSession = function(path){
+    client.set(path,-1)
+    client.set(statusKey(path),'false')
 }
 
 app.get("/create",(req,res) => {
     let sesName = uuidv4()
-    createSession(sesName)
-    res.send(sesName)
+    createSession(sesName,function(){res.send(sesName)})
 })
 
 http.listen(3000,function() {
