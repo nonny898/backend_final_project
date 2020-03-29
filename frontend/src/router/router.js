@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import store from '../store/store.js';
+import axios from 'axios';
 import Login from '../views/Login.vue';
 import Logout from '../views/Logout.vue';
 import Main from '../views/Main.vue';
@@ -33,11 +33,18 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.isLoggedIn) {
-      next();
-      return;
-    }
-    next('/login');
+    axios
+      .get("http://localhost:3000/profile", {
+        withCredentials: true
+      })
+      .then(resp => {
+          console.log(resp.data.user)
+          if (resp.data.user) {
+            next();
+            return;
+          }
+          next('/login');
+        })
   } else {
     next();
   }

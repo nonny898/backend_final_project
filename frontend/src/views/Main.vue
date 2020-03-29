@@ -3,22 +3,8 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
-  name: "Main",
-  mounted() {
-    // to get the cookie data whenever component is mounted.
-    this.checkIfLoggedIn();
-  },
-  methods: {
-    checkIfLoggedIn() {
-      axios
-        .get("http://localhost:3000/profile", { withCredentials: true })
-        .then(response => {
-          console.log(response.data.user);
-        });
-    }
-  }
+  name: "Main"
 };
 </script>
 
