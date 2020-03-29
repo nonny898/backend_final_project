@@ -17,7 +17,7 @@ app.use(
 let nextUserId = 1
 
 var createSession = function(path){
-    let ses = io.of(path)
+    let ses = io.of('/' + path)
     connectedClients.set(path,0)
     ses.on('connection',function(socket){
         // console.log("Someone connected to test");
@@ -52,7 +52,7 @@ var deleteSession = function(path,session){
 }
 
 app.get("/create",(req,res) => {
-    let sesName = '/' + uuidv4()
+    let sesName = uuidv4()
     createSession(sesName)
     res.send(sesName)
 })
