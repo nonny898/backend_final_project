@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
     res.redirect('/'+ uuidv4())
 })
 
-app.get('/namespaces', (req,res) => {
+app.get('/nps', (req,res) => {
     // Debugging purpose
     // getAllnamespace now 
     res.json({namespaces: Object.keys(io.nsps)})
