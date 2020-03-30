@@ -10,8 +10,8 @@ metadata:
   name: api
 spec:
   ports:
-    - name: "3333"
-      port: 3333
+    - name: "4000"
+      port: 4000
       targetPort: 3000
   selector:
     io.kompose.service: api
