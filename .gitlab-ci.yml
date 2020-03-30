@@ -13,6 +13,34 @@ docker-build-master-sessions:
   only:
     - master
 
+docker-build-master-oauth:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE_OAUTH" "$CI_DOCKERFILE_OAUTH"
+    - docker push "$CI_REGISTRY_IMAGE_OAUTH"
+  only:
+    - master
+
+docker-build-oauth:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE_OAUTH:$CI_COMMIT_REF_SLUG" "$CI_DOCKERFILE_OAUTH"
+    - docker push "$CI_REGISTRY_IMAGE_OAUTH:$CI_COMMIT_REF_SLUG"
+  except:
+    - master
+
 docker-build-sessions:
   # Official docker image.
   image: docker:latest
@@ -24,5 +52,61 @@ docker-build-sessions:
   script:
     - docker build --pull -t "$CI_REGISTRY_IMAGE_SESSIONS:$CI_COMMIT_REF_SLUG" "$CI_REGISTRY_DOCKERFILE_SESSIONS"
     - docker push "$CI_REGISTRY_IMAGE_SESSIONS:$CI_COMMIT_REF_SLUG"
+  except:
+    - master
+    
+docker-build-master-files:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE_FILES" "$CI_DOCKERFILE_FILES"
+    - docker push "$CI_REGISTRY_IMAGE_FILES"
+  only:
+    - master
+
+docker-build-files:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE_FILES:$CI_COMMIT_REF_SLUG" "$CI_DOCKERFILE_FILES"
+    - docker push "$CI_REGISTRY_IMAGE_FILES:$CI_COMMIT_REF_SLUG"
+  except:
+    - master
+    
+docker-build-master-frontend:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE_FRONTEND" "$CI_DOCKERFILE_FRONTEND"
+    - docker push "$CI_REGISTRY_IMAGE_FRONTEND"
+  only:
+    - master
+
+docker-build-frontend:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE_FRONTEND:$CI_COMMIT_REF_SLUG" "$CI_DOCKERFILE_FRONTEND"
+    - docker push "$CI_REGISTRY_IMAGE_FRONTEND:$CI_COMMIT_REF_SLUG"
   except:
     - master
