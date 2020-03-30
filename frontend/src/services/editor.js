@@ -1,3 +1,4 @@
+import config from '../services/app.config'
 "use strict";
 
 const editor = ace.edit('editor')
@@ -21,7 +22,7 @@ var createSession = function () {
     if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
       opensocket(xmlHttp.responseText)
   }
-  xmlHttp.open('GET', 'http://localhost:3000/create', true);
+  xmlHttp.open('GET', `http://${config.SESSION_ADDR}/create`, true);
   xmlHttp.send(null);
 }
 
@@ -30,7 +31,7 @@ function joinSession(path) {
     socket.removeAllListeners()
     socket.disconnect()
   }
-  socket = io('ws://localhost:3000/' + path)
+  socket = io(`ws://${config.SESSION_ADDR}/` + path)
   console.log("Connecting to session " + path)
   socket.on('init', ({
     id,
@@ -56,7 +57,7 @@ function joinSession(path) {
 
 function opensocket(url) {
   console.log("Got reply for socket session " + url)
-  socket = io('ws://localhost:3000/' + url)
+  socket = io(`ws://${config.SESSION_ADDR}/` + url)
   socket.on('init', ({
     id,
     history
