@@ -48,6 +48,8 @@ export default {
       require("brace/mode/less");
       require("brace/theme/monokai");
       require("brace/snippets/javascript"); //snippet
+      require("../services/editor"); //snippet
+      require("../services/rga"); //snippet
     }
   }
 };

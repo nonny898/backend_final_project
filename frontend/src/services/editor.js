@@ -1,7 +1,7 @@
 const editor = ace.edit('editor');
 let socket;
 
-const serveradr = '192.168.39.37:30113/';
+const serveradr = 'localhost:3000/';
 
 let rga;
 if (!rga) {
