@@ -1,6 +1,8 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = require('../models/user-model');
+const redis = require('redis');
+
+const client = redis.createClient();
 
 const keys = require('./keys');
 
@@ -9,8 +11,8 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id).then(user => {
-    done(null, user);
+  client.get(id, (err, reply) => {
+    done(null, JSON.parse(reply));
   });
 });
 
@@ -22,16 +24,18 @@ passport.use(
       clientSecret: keys.google.clientSecret,
     },
     (accessToken, refreshToken, profile, done) => {
-      User.findOne({ googleId: profile.id }).then(currentUser => {
-        if (currentUser) {
-          done(null, currentUser);
+      client.get(profile.id, (err, reply) => {
+        if (reply) {
+          done(null, JSON.parse(reply));
         } else {
-          const user = new User({
+          const user = {
+            id: profile.id,
             name: profile.displayName,
-            googleId: profile.id,
-          });
-          user.save().then(newUser => {
-            done(null, newUser);
+          };
+          client.set(profile.id, JSON.stringify(user), (err, success) => {
+            if (success === 'OK') {
+              done(null, user);
+            }
           });
         }
       });
