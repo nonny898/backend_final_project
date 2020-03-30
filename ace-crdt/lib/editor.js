@@ -31,7 +31,7 @@ var createSession = function() {
   }
   xmlHttp.open('GET', 'http://' + serveradr + 'create', true);
   xmlHttp.send(null);
-}
+};
 
 function joinSession(path) {
   if (socket != null) {
@@ -72,4 +72,4 @@ function opensocket(url, isCreator) {
     editor.focus()
   });
 }
-editor.focus()
+editor.focus();

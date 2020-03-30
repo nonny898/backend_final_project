@@ -5,6 +5,7 @@ import Login from '../views/Login.vue';
 import Logout from '../views/Logout.vue';
 import Main from '../views/Main.vue';
 import Editor from '../views/Editor.vue'
+import config from "../services/app.config"
 
 Vue.use(Router);
 
@@ -44,7 +45,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     axios
-      .get("http://localhost:3000/profile", {
+      .get(`http://${config.OAUTH_ADDR}/profile`, {
         withCredentials: true
       })
       .then(resp => {

@@ -1,10 +1,10 @@
 <template>
   <v-form id="login-form" @keydown.enter="login">
     <h2 class="signin">Sign in with these providers</h2>
-    <a href="http://localhost:3000/auth/google">
+    <a :href="googleAuth">
       <i class="fa-10x fab fa-facebook" style="color:blue"></i>
     </a>
-    <a href="http://localhost:3000/auth/google">
+    <a :href="googleAuth">
       <i class="fa-10x fab fa-google" style="color:red"></i>
     </a>
     <a href="/auth/google" style="display:flex">
@@ -14,7 +14,13 @@
 </template>
 
 <script>
+import config from "../services/app.config"
 export default {
+  data: function() {
+    return {
+      googleAuth: `http://${config.OAUTH_ADDR}/auth/google`
+    }
+  }
 };
 </script>
 

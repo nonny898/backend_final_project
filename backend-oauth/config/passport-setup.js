@@ -1,8 +1,9 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const redis = require('redis');
+const config = require('../config/env')
 
-const client = redis.createClient();
+const client = redis.createClient({url: `redis://${config.REDIS_ADDR}`});
 
 const keys = require('./keys');
 

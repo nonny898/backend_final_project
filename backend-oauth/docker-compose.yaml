@@ -6,18 +6,18 @@ services:
     image: backend-oauth
     # image: mapringg/backend-oauth:latest
     ports:
-      - "3000:3000"
+      - "4000:4000"
     networks:
       - backend
     environment:
-      - CORS_DEBUG=localhost
-      - MONGODB_ENV=mongo
-      - FRONTEND_ADDR=http://localhost
+      - CORS_DEBUG=localhost:8080
+      - REDIS_ADDR=redis:6379
+      - FRONTEND_ADDR=http://localhost:8080
     depends_on:
-      - mongo
+      - redis
 
-  mongo:
-    image: mongo:3
+  redis:
+    image: redis
     networks:
       - backend
 

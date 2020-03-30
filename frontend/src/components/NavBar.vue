@@ -14,11 +14,12 @@
 
 <script>
 import axios from "axios";
+import config from "../services/app.config"
 export default {
   methods: {
     logout() {
       axios
-        .get("http://localhost:3000/auth/logout", { withCredentials: true })
+        .get(`http://${config.OAUTH_ADDR}/auth/logout`, { withCredentials: true })
         .then(() => {
           this.$router.push("/login");
         });
