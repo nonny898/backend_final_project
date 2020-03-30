@@ -12,6 +12,9 @@ kubectl apply -f ./session-service.yaml
 kubectl apply -f ./oauth-deployment.yaml
 kubectl apply -f ./oauth-service.yaml
 
+kubectl apply -f ./api-deployment.yaml
+kubectl apply -f ./api-service.yaml
+
 kubectl apply -f ./frontend-deployment.yaml
 kubectl apply -f ./frontend-service.yaml
 

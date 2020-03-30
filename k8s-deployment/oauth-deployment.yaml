@@ -20,5 +20,7 @@ spec:
                 env:
                 -   name: REDIS_ADDR
                     value: redis-master
+                -   name: FRONTEND_ADDR
+                    value: natwit442.xyz
                 ports:
                 -   containerPort: 3000

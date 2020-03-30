@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   creationTimestamp: "2020-03-30T15:48:47Z"
-  generation: 1
+  generation: 2
   name: colab-editing
   namespace: default
   resourceVersion: "6147"
@@ -25,5 +25,11 @@ spec:
       - backend:
           serviceName: sessions-socket-service
           servicePort: 80
+  - host: files.natwit442.xyz
+    http:
+        paths:
+        - backend:
+            serviceName: files-service
+            servicePort: 4000
 status:
   loadBalancer: {}
