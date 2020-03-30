@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: frontend-config
+    labels:
+        app: frontend
+data:
+  config.js: |
+    export default {
+        BACKEND_ADDR: 'backend',
+        OAUTH_ADDR: 'oauth'
+    }
