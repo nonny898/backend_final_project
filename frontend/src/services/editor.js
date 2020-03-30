@@ -1,4 +1,5 @@
 import config from '../services/app.config'
+import RGA from '../services/rga'
 "use strict";
 
 const editor = ace.edit('editor')
@@ -9,9 +10,9 @@ if (!rga) {
   editor.setWrapBehavioursEnabled(false)
   rga = new RGA.AceEditorRGA('testuser', editor)
 }
+console.log("Initialised editor")
 
-
-var createSession = function () {
+function createSession () {
   if (socket != null) {
     console.log("Already connected to session")
     return
@@ -26,7 +27,7 @@ var createSession = function () {
   xmlHttp.send(null);
 }
 
-function joinSession(path) {
+function joinSession(path, editor) {
   if (socket != null) {
     socket.removeAllListeners()
     socket.disconnect()
@@ -38,7 +39,7 @@ function joinSession(path) {
     history
   }) => {
     editor.setWrapBehavioursEnabled(false)
-    rga = new RGA.AceEditorRGA(id, editor)
+    let rga = new RGA.AceEditorRGA(id, editor)
     rga.subscribe(op => {
       socket.emit('message', op)
     })
