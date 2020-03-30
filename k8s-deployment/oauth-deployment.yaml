@@ -15,7 +15,7 @@ spec:
         spec:
             containers:
             -   name: oauth-deployment-server
-                image: registry.gitlab.com/brandonfox/backend_final_project/oauth
+                image: registry.gitlab.com/brandonfox/backend_final_project/oauth:deployment
                 imagePullPolicy: Always
                 env:
                 -   name: REDIS_ADDR

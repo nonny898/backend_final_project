@@ -14,14 +14,17 @@ spec:
                 app: frontend
         spec:
             volumes:
-                -   name: frontend-config
+                -   name: config
+                    configMap:
+                        name: frontend-config
             containers:
             -   name: frontend-deployment-server
-                image: registry.gitlab.com/brandonfox/backend_final_project/frontend
+                image: registry.gitlab.com/brandonfox/backend_final_project/frontend:deployment
                 imagePullPolicy: Always
                 ports:
                 -   containerPort: 80
                 volumeMounts:
-                -   name: frontend-config
-                    mountPath: /usr/share/nginx/html/config.js
+                -   name: config
+                    mountPath: /usr/share/nginx/html/js/config.js
                     subPath: config.js
+                    
