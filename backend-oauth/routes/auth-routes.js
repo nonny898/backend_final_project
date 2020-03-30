@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport');
-const env = require('../config/env')
+const env = require('../config/env');
 
 router.get('/logout', (req, res) => {
   req.logout();
@@ -15,7 +15,7 @@ router.get(
 );
 
 router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
-  console.log(req.url)
+  console.log(req.url);
   res.redirect(env.FRONTEND_ADDR);
 });
 

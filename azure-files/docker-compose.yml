@@ -3,4 +3,4 @@ services:
   api:
     image: mapringg/upload-download-express:latest
     ports:
-      - "4000:3000"
+      - "3500:3500"

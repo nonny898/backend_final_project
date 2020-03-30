@@ -31,7 +31,7 @@ spec:
             - name: azurefileshare
               mountPath: /home/node/code/uploads
           ports:
-            - containerPort: 3000
+            - containerPort: 3500
           resources: {}
       restartPolicy: Always
       serviceAccountName: ""

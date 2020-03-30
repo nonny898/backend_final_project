@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const env = require('./config')
+const env = require('./config');
 
 const app = express();
 
@@ -87,6 +87,6 @@ app.get('/download', (req, res, next) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log('listening on 3000');
+app.listen(3500, () => {
+  console.log('listening on 3500');
 });
