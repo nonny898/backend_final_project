@@ -4,29 +4,43 @@
       <h1>MUIC Code Colab</h1>
     </div>
     <v-spacer></v-spacer>
-    <v-btn href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank" text>
-      <span class="mr-2">Latest Release</span>
-      <v-icon>mdi-open-in-new</v-icon>
-    </v-btn>
-    <v-btn @click="logout()" color="secondary">Logout</v-btn>
+    <v-btn v-if="this.currentRoute === 'Main'" class="mr-6" @click="toEditor()">Go To Editor</v-btn>
+    <v-btn @click="logout()">Logout</v-btn>
   </v-app-bar>
 </template>
 
 <script>
 import axios from "axios";
-import config from "../services/app.config"
+import config from "../services/app.config";
 export default {
+  data: function() {
+    return {
+      currentRoute: ""
+    };
+  },
+  created() {
+    this.currentRoute = this.$router.currentRoute.name;
+  },
   methods: {
     logout() {
       axios
-        .get(`http://${config.OAUTH_ADDR}/auth/logout`, { withCredentials: true })
+        .get(`http://${config.OAUTH_ADDR}/auth/logout`, {
+          withCredentials: true
+        })
         .then(() => {
           this.$router.push("/login");
         });
+    },
+    toEditor() {
+      this.$router.push("/editor");
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.v-btn {
+  background-color: white !important;
+  color: #272727;
+}
 </style>

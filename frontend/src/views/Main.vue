@@ -3,8 +3,17 @@
     <NavBar />
     <v-container>
       <v-card width="90%" class="mx-auto">
-        <v-list two-line subheader>
-          <v-subheader inset>Folders</v-subheader>
+        <v-list rounded>
+          <v-subheader inset>
+            <!-- <v-breadcrumbs :items="items"></v-breadcrumbs> -->
+            Folders
+            <v-spacer></v-spacer>
+            <div v-if="currentPath !== '/' ">
+              <v-btn icon @click="previousPage(currentPath)">
+                <v-icon color="grey lighten-1">mdi-keyboard-backspace</v-icon>
+              </v-btn>
+            </div>
+          </v-subheader>
 
           <v-list-item
             v-for="item in folders"
@@ -32,6 +41,12 @@
             <v-list-item-content>
               <v-list-item-title v-text="item.title"></v-list-item-title>
             </v-list-item-content>
+
+            <v-list-item-action>
+              <v-btn icon>
+                <v-icon color="grey lighten-1">mdi-open-in-new</v-icon>
+              </v-btn>
+            </v-list-item-action>
           </v-list-item>
         </v-list>
       </v-card>
@@ -41,25 +56,38 @@
 
 <script>
 import axios from "axios";
-import NavBar from "../components/NavBar";
-import config from "../services/app.config"
+import config from "../services/app.config";
 export default {
   name: "Main",
   data: () => ({
     folders: [],
     files: [],
-    currentPath: "/"
+    currentPath: "/",
+    items: [
+      {
+        text: "Dashboard",
+        disabled: false,
+        href: "breadcrumbs_dashboard"
+      },
+      {
+        text: "Link 1",
+        disabled: false,
+        href: "breadcrumbs_link_1"
+      },
+      {
+        text: "Link 2",
+        disabled: true,
+        href: "breadcrumbs_link_2"
+      }
+    ]
   }),
-  components: {
-    NavBar
-  },
   mounted() {
     this.getFoldersAndFiles();
   },
   methods: {
     getFoldersAndFiles(folder) {
-      if (folder){
-        this.currentPath = this.currentPath + folder + "/"
+      if (folder) {
+        this.currentPath = this.currentPath + folder + "/";
       }
       axios
         .get("http://" + config.BACKEND_ADDR + "/upload", {
@@ -85,11 +113,25 @@ export default {
           this.files = files;
         })
         .catch(err => {
-          console.log("Log: getFoldersAndFiles -> err", err);
+          console.log(err);
         });
     },
+    previousPage(path) {
+      this.currentPath =
+        path
+          .split("/")
+          .filter(function(e) {
+            return e;
+          })
+          .slice(0, -1)
+          .join("/") + "/";
+      this.getFoldersAndFiles();
+    },
     toEditor(file) {
-      this.$router.push({ name: "Editor", params: { file: this.currentPath + file } });
+      this.$router.push({
+        name: "Editor",
+        params: { file: this.currentPath + file }
+      });
     }
   }
 };

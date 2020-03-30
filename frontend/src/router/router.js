@@ -49,7 +49,6 @@ router.beforeEach((to, from, next) => {
         withCredentials: true
       })
       .then(resp => {
-          console.log(resp.data.user)
           if (resp.data.user) {
             next();
             return;

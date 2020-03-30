@@ -29,7 +29,7 @@ var createSession = function() {
     if (xmlHttp.readyState == 4 && xmlHttp.status == 200) opensocket(xmlHttp.responseText, true)
 
   }
-  xmlHttp.open('GET', 'http://' + serveradr + 'create', true);
+  xmlHttp.open('GET', `http://${config.SESSION_ADDR}/create`, true);
   xmlHttp.send(null);
 };
 
