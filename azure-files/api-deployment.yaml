@@ -24,14 +24,14 @@ spec:
         io.kompose.service: api
     spec:
       containers:
-        - image: mapringg/upload-download-express:latest
+        - image: registry.gitlab.com/brandonfox/backend_final_project/files
           imagePullPolicy: ""
           name: api
           volumeMounts:
             - name: azurefileshare
               mountPath: /home/node/code/uploads
           ports:
-            - containerPort: 3500
+            - containerPort: 4000
           resources: {}
       restartPolicy: Always
       serviceAccountName: ""

@@ -1,6 +1,8 @@
 version: "3"
 services:
   api:
-    image: mapringg/upload-download-express:latest
+    image: registry.gitlab.com/brandonfox/backend_final_project/files
     ports:
-      - "3500:3500"
+      - "4000:4000"
+    environment: 
+      - CORS_ALLOW=localhost:8080

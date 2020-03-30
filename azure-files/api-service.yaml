@@ -12,7 +12,7 @@ spec:
   ports:
     - name: "3500"
       port: 3500
-      targetPort: 3500
+      targetPort: 4000
   selector:
     io.kompose.service: api
   type: LoadBalancer

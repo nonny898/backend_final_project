@@ -15,7 +15,7 @@ spec:
         spec:
             containers:
             -   name: frontend-deployment-server
-                image: registry.gitlab.com/brandonfox/backend_final_project/frontend:deployment
+                image: registry.gitlab.com/brandonfox/backend_final_project/frontend
                 imagePullPolicy: Always
                 ports:
                 -   containerPort: 80
