@@ -3,17 +3,23 @@ const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const cors = require('cors');
+const dotenv = require('dotenv');
 const keys = require('./config/keys');
+
+dotenv.config();
 
 require('./config/passport-setup');
 
 const authRoutes = require('./routes/auth-routes');
 const profileRoutes = require('./routes/profile-routes');
 
-mongoose.connect('mongodb://localhost:27017/backend-project-2020', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  `mongodb://${process.env.MONGODB_ENV}:27017/backend-project-2020`,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 const app = express();
 app.use(
@@ -33,10 +39,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.get('/', (req, res) => {
-  res.render('index', { user: req.user });
-});
 
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
