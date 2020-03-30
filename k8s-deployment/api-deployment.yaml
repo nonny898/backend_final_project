@@ -26,8 +26,6 @@ spec:
       serviceAccountName: ""
       volumes:
         - name: azurefileshare
-          azureFile:
-            secretName: azure-secret
-            shareName: files-k8s
-            readOnly: false
+          persistentVolumeClaim:
+            claimName: fileshare-pvc
 status: {}
