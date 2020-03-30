@@ -15,6 +15,7 @@ const router = new Router({
       path: '/editor',
       name: 'Editor',
       component: Editor,
+      props: true,
       meta: {
       requiresAuth: true,
       }

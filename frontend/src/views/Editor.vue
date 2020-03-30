@@ -13,12 +13,29 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Editor",
+  props: ["someUnrelatedVar"],
   data: function() {
     return {
       content: ""
     };
+  },
+  created() {
+    axios
+      .get("http://localhost:4000/download", {
+        params: {
+          uploadPath: this.$route.params.file
+        }
+      })
+      .then(result => {
+        console.log(result.data)
+        this.content = result.data;
+      })
+      .catch(err => {
+        console.log("Log: getFoldersAndFiles -> err", err);
+      });
   },
   components: {
     editor: require("vue2-ace-editor")
