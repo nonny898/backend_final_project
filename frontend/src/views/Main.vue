@@ -42,6 +42,7 @@
 <script>
 import axios from "axios";
 import NavBar from "../components/NavBar";
+import config from "../services/app.config"
 export default {
   name: "Main",
   data: () => ({
@@ -61,7 +62,7 @@ export default {
         this.currentPath = this.currentPath + folder + "/"
       }
       axios
-        .get("http://localhost:4000/upload", {
+        .get("http://" + config.BACKEND_ADDR + "/upload", {
           params: {
             folders: this.currentPath
           }

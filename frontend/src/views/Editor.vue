@@ -14,6 +14,7 @@
 
 <script>
 import axios from "axios";
+import config from "../services/app.config"
 export default {
   name: "Editor",
   props: ["someUnrelatedVar"],
@@ -24,7 +25,7 @@ export default {
   },
   created() {
     axios
-      .get("http://localhost:4000/download", {
+      .get("http://" + config.BACKEND_ADDR + "/download", {
         params: {
           uploadPath: this.$route.params.file
         }
