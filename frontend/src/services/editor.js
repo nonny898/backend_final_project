@@ -1,55 +1,82 @@
-const editor = ace.edit('editor');
-let socket;
+"use strict";
 
-const serveradr = 'localhost:3000/';
+const editor = ace.edit('editor')
+var socket
 
-let rga;
+let rga
 if (!rga) {
-  editor.setWrapBehavioursEnabled(false);
-  rga = new RGA.AceEditorRGA('host', editor);
+  editor.setWrapBehavioursEnabled(false)
+  rga = new RGA.AceEditorRGA('testuser', editor)
 }
 
-const createSession = function() {
+
+var createSession = function () {
   if (socket != null) {
-    console.log('Already connected to session');
-    return;
+    console.log("Already connected to session")
+    return
   }
-  const xmlHttp = new XMLHttpRequest();
-  console.log('Creating request to make session');
-  xmlHttp.onreadystatechange = function() {
+  var xmlHttp = new XMLHttpRequest();
+  console.log("Creating request to make session")
+  xmlHttp.onreadystatechange = function () {
     if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-      opensocket(xmlHttp.responseText);
-  };
-  xmlHttp.open('GET', `http://${serveradr}create`, true);
+      opensocket(xmlHttp.responseText)
+  }
+  xmlHttp.open('GET', 'http://localhost:3000/create', true);
   xmlHttp.send(null);
-};
+}
 
 function joinSession(path) {
   if (socket != null) {
-    socket.removeAllListeners();
-    socket.disconnect();
+    socket.removeAllListeners()
+    socket.disconnect()
   }
-  opensocket(path);
+  socket = io('ws://localhost:3000/' + path)
+  console.log("Connecting to session " + path)
+  socket.on('init', ({
+    id,
+    history
+  }) => {
+    editor.setWrapBehavioursEnabled(false)
+    rga = new RGA.AceEditorRGA(id, editor)
+    rga.subscribe(op => {
+      socket.emit('message', op)
+    })
+
+    socket.on('message', op => {
+      rga.receive(op)
+      console.log("Got message")
+    })
+
+    socket.emit('message', {
+      type: 'historyRequest'
+    })
+    editor.focus()
+  });
 }
 
 function opensocket(url) {
-  console.log(`Opening socket on url ${url}`);
-  socket = io(`ws://${serveradr}`, { query: `session=${url}` });
-  socket.on('init', ({ id, history }) => {
-    console.log(`Got id ${id}`);
-    editor.setWrapBehavioursEnabled(false);
-    rga = new RGA.AceEditorRGA(id, editor);
+  console.log("Got reply for socket session " + url)
+  socket = io('ws://localhost:3000/' + url)
+  socket.on('init', ({
+    id,
+    history
+  }) => {
+    if (!rga) {
+      editor.setWrapBehavioursEnabled(false)
+      rga = new RGA.AceEditorRGA('host', editor)
+    }
     rga.subscribe(op => {
-      socket.emit('message', op);
-    });
+      socket.emit('message', op)
+    })
 
     socket.on('message', op => {
-      rga.receive(op);
-      console.log(op);
-    });
+      rga.receive(op)
+    })
 
-    socket.emit('message', { type: 'historyRequest' });
-    editor.focus();
+    socket.emit('message', {
+      type: 'historyRequest'
+    })
+    editor.focus()
   });
 }
-editor.focus();
+editor.focus()

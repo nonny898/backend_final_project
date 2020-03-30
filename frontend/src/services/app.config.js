@@ -1,4 +1,4 @@
 export default {
-    BACKEND_ADDR: 'backend:3000',
-    OAUTH_ADDR: 'oauth-service:3333'
+    BACKEND_ADDR: 'backend:3500',
+    OAUTH_ADDR: 'localhost:4000'
 }
