@@ -1,98 +1,95 @@
 <template>
   <div>
     <NavBar />
+    <v-container>
+      <v-card width="90%" class="mx-auto">
+        <v-list two-line subheader>
+          <v-subheader inset>Folders</v-subheader>
 
-    <v-list>
-      <v-list-group
-        v-for="item in items"
-        :key="item.title"
-        v-model="item.active"
-        :prepend-icon="item.action"
-        no-action
-      >
-        <template v-slot:activator>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title"></v-list-item-title>
-          </v-list-item-content>
-        </template>
+          <v-list-item
+            v-for="item in folders"
+            :key="item.title"
+            @click="getFoldersAndFiles(item.title)"
+          >
+            <v-list-item-avatar>
+              <i class="fas fa-folder"></i>
+            </v-list-item-avatar>
 
-        <v-list-item
-          v-for="subItem in item.items"
-          :key="subItem.title"
-        >
-          <v-list-item-content>
-            <v-list-item-title v-text="subItem.title"></v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-group>
-    </v-list>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title"></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-divider inset></v-divider>
+
+          <v-subheader inset>Files</v-subheader>
+
+          <v-list-item v-for="item in files" :key="item.title" @click="toEditor(item.title)">
+            <v-list-item-avatar>
+              <i class="fas fa-file-alt"></i>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title v-text="item.title"></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </v-container>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import NavBar from "../components/NavBar";
 export default {
   name: "Main",
-  data () {
-      return {
-        items: [
-          {
-            action: 'local_activity',
-            title: 'Attractions',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            action: 'restaurant',
-            title: 'Dining',
-            active: true,
-            items: [
-              { title: 'Breakfast & brunch' },
-              { title: 'New American' },
-              { title: 'Sushi' },
-            ],
-          },
-          {
-            action: 'school',
-            title: 'Education',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            action: 'directions_run',
-            title: 'Family',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            action: 'healing',
-            title: 'Health',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            action: 'content_cut',
-            title: 'Office',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-          {
-            action: 'local_offer',
-            title: 'Promotions',
-            items: [
-              { title: 'List Item' },
-            ],
-          },
-        ],
-      }
-    },
+  data: () => ({
+    folders: [],
+    files: [],
+    currentPath: "/"
+  }),
   components: {
     NavBar
+  },
+  mounted() {
+    this.getFoldersAndFiles();
+  },
+  methods: {
+    getFoldersAndFiles(folder) {
+      if (folder){
+        this.currentPath = this.currentPath + folder + "/"
+      }
+      axios
+        .get("http://localhost:4000/upload", {
+          params: {
+            folders: this.currentPath
+          }
+        })
+        .then(result => {
+          const files = [];
+          const folders = [];
+          result.data.forEach(element => {
+            if (element.includes(".")) {
+              files.push({
+                title: element
+              });
+            } else {
+              folders.push({
+                title: element
+              });
+            }
+          });
+          this.folders = folders;
+          this.files = files;
+        })
+        .catch(err => {
+          console.log("Log: getFoldersAndFiles -> err", err);
+        });
+    },
+    toEditor(file) {
+      this.$router.push({ name: "Editor", params: { file: this.currentPath + file } });
+    }
   }
 };
 </script>

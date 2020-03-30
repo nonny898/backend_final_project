@@ -21,8 +21,8 @@ if (!fs.existsSync(path.join(process.cwd(), 'uploads'))) {
 }
 
 app.get('/upload', (req, res, next) => {
-  if (req.body.folders) {
-    const folders = req.body.folders.split('/');
+  if (req.query.folders) {
+    const folders = req.query.folders.split('/');
     fs.readdir(
       path.join(process.cwd(), 'uploads', ...folders),
       (err, files) => {
@@ -73,20 +73,19 @@ app.post('/upload', (req, res, next) => {
 
 app.get('/download', (req, res, next) => {
   const uploadPath = req.query.uploadPath.split('/');
-  console.log(uploadPath);
   const pathToFile = path.join(process.cwd(), 'uploads', ...uploadPath);
   const readStream = fs.createReadStream(pathToFile);
-  // // This will wait until we know the readable stream is actually valid before piping
+  // This will wait until we know the readable stream is actually valid before piping
   readStream.on('open', () => {
     // This just pipes the read stream to the response object (which goes to the client)
     readStream.pipe(res);
   });
-  // // This catches any errors that happen while creating the readable stream (usually invalid names)
+  // This catches any errors that happen while creating the readable stream (usually invalid names)
   readStream.on('error', err => {
     res.end(err);
   });
 });
 
-app.listen(3500, () => {
-  console.log('listening on 3500');
+app.listen(4000, () => {
+  console.log('listening on 4000');
 });
