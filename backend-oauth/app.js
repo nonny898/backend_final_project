@@ -13,7 +13,7 @@ const profileRoutes = require('./routes/profile-routes');
 const app = express();
 app.use(
   cors({
-    origin: `http://${env.CORS_ALLOW}`, // restrict calls to those this address
+    origin: [`http://${env.CORS_ALLOW}`,`http://www.${env.CORS_ALLOW}`], // restrict calls to those this address
     methods: 'GET', // only allow GET requests
     credentials: true,
   })
