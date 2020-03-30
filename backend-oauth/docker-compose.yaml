@@ -6,7 +6,7 @@ services:
     image: backend-oauth
     # image: mapringg/backend-oauth:latest
     ports:
-      - "4000:4000"
+      - "3000:3000"
     networks:
       - backend
     environment:

@@ -32,6 +32,6 @@ app.use(passport.session());
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 
-app.listen(4000, () => {
-  console.log('listening on 4000');
+app.listen(3000, () => {
+  console.log('listening on 3000');
 });

@@ -14,3 +14,5 @@ kubectl apply -f ./oauth-service.yaml
 
 kubectl apply -f ./frontend-deployment.yaml
 kubectl apply -f ./frontend-service.yaml
+
+kubectl apply -f ./ingress.yaml
