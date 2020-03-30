@@ -5,6 +5,7 @@ const passport = require('passport');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const keys = require('./config/keys');
+const env = require('./config/env');
 
 dotenv.config();
 
@@ -14,7 +15,7 @@ const authRoutes = require('./routes/auth-routes');
 const profileRoutes = require('./routes/profile-routes');
 
 mongoose.connect(
-  `mongodb://${process.env.MONGODB_ENV}:27017/backend-project-2020`,
+  `mongodb://${env.MONGODB_ENV}:27017/backend-project-2020`,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -24,7 +25,7 @@ mongoose.connect(
 const app = express();
 app.use(
   cors({
-    origin: 'http://localhost:8080', // restrict calls to those this address
+    origin: `http://${env.CORS_DEBUG}`, // restrict calls to those this address
     methods: 'GET', // only allow GET requests
     credentials: true,
   })

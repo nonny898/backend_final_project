@@ -1,13 +1,18 @@
 version: "3"
 services:
   api:
-    image: mapringg/backend-oauth:latest
+    build:
+      context: .
+    image: backend-oauth
+    # image: mapringg/backend-oauth:latest
     ports:
-      - "3333:3000"
+      - "3000:3000"
     networks:
       - backend
     environment:
+      - CORS_DEBUG=localhost
       - MONGODB_ENV=mongo
+      - FRONTEND_ADDR=http://localhost
     depends_on:
       - mongo
 

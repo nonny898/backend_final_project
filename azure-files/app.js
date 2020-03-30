@@ -3,12 +3,13 @@ const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const env = require('./config')
 
 const app = express();
 
 app.use(
   cors({
-    origin: 'http://localhost:8080', // restrict calls to those this address
+    origin: `http://${env.CORS_ALLOW}`, // restrict calls to those this address
     methods: ['GET', 'POST'], // only allow GET, POST requests
   })
 );
