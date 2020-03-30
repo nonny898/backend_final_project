@@ -10,7 +10,7 @@ module.exports = {
     module: {
       rules: [
         {
-          test: /config.*config\.js$/,
+          test: /.*config\.js$/,
           use: [
             {
               loader: 'file-loader',
