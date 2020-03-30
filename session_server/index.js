@@ -73,6 +73,10 @@ var deleteSession = function(path) {
   client.set(statusKey(path), 'false');
 };
 
+app.get('/', (req,res) => {
+  res.send("ok")
+})
+
 app.get('/create', (req, res) => {
   const sesName = uuidv4();
   createSession(sesName, function() {

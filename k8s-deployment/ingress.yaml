@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   creationTimestamp: "2020-03-30T15:48:47Z"
-  generation: 2
+  generation: 1
   name: colab-editing
   namespace: default
   resourceVersion: "6147"
@@ -18,7 +18,7 @@ spec:
       paths:
       - backend:
           serviceName: oauth-service
-          servicePort: 3333
+          servicePort: 80
   - host: scktio.natwit442.xyz
     http:
       paths:

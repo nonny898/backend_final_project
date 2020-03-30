@@ -6,6 +6,9 @@ kubectl apply -f ./redis-master-service.yaml
 kubectl apply -f ./redis-slave-deployment.yaml
 kubectl apply -f ./redis-slave-service.yaml
 
+kubectl apply -f ./google-fileshare.yaml
+kubectl apply -f ./google-fileshare-claim.yaml
+
 kubectl apply -f ./session-deployment.yaml
 kubectl apply -f ./session-service.yaml
 

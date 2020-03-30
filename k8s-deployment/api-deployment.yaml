@@ -17,6 +17,9 @@ spec:
         - image: registry.gitlab.com/brandonfox/backend_final_project/files
           imagePullPolicy: "Always"
           name: files-deployment
+          env: 
+          - name: CORS_ALLOW
+            value: natwit442.xyz
           volumeMounts:
             - name: azurefileshare
               mountPath: /home/node/code/uploads
@@ -27,5 +30,5 @@ spec:
       volumes:
         - name: azurefileshare
           persistentVolumeClaim:
-            claimName: fileshare-pvc
+            claimName: google-fileclaim
 status: {}

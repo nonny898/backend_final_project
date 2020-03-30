@@ -11,5 +11,5 @@ spec:
       protocol: TCP
   selector:
     app: files
-  type: LoadBalancer
+  type: NodePort
 

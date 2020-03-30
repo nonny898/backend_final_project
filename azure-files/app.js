@@ -86,6 +86,10 @@ app.get('/download', (req, res, next) => {
   });
 });
 
+app.get('/',(req,res) => {
+  res.send('ok')
+})
+
 app.listen(4000, () => {
   console.log('listening on 4000');
 });
