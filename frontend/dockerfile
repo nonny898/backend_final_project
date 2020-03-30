@@ -1,8 +1,6 @@
 # build stage
 FROM node:lts-alpine as build-stage
 WORKDIR /app
-ARG VUE_APP_OAUTH_ADDR
-ENV VUE_APP_OAUTH_ADDR=$VUE_APP_OAUTH_ADDR
 COPY package*.json ./
 RUN npm install
 COPY . .

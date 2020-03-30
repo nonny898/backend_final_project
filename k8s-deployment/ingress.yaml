@@ -18,12 +18,18 @@ spec:
       paths:
       - backend:
           serviceName: oauth-service
-          servicePort: 3333
+          servicePort: 80
   - host: scktio.natwit442.xyz
     http:
       paths:
       - backend:
           serviceName: sessions-socket-service
           servicePort: 80
+  - host: files.natwit442.xyz
+    http:
+        paths:
+        - backend:
+            serviceName: files-service
+            servicePort: 4000
 status:
   loadBalancer: {}

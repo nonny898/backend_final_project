@@ -13,7 +13,7 @@ const profileRoutes = require('./routes/profile-routes');
 const app = express();
 app.use(
   cors({
-    origin: `http://${env.CORS_DEBUG}`, // restrict calls to those this address
+    origin: [`http://${env.CORS_ALLOW}`,`http://*.${env.CORS_ALLOW}`], // restrict calls to those this address
     methods: 'GET', // only allow GET requests
     credentials: true,
   })
@@ -31,6 +31,10 @@ app.use(passport.session());
 
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
+
+app.get('/',(req,res) => {
+  res.send('ok')
+})
 
 app.listen(3000, () => {
   console.log('listening on 3000');

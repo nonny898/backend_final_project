@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: google-files
+spec:
+  capacity:
+    storage: 1T
+  accessModes:
+  - ReadWriteMany
+  nfs:
+    path: /google_fileshare
+    server: 10.1.240.82

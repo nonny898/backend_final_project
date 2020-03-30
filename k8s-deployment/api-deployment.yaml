@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: files-deployment
+  labels:
+    app: files
+spec:
+  selector:
+    matchLabels:
+      app: files
+  template:
+    metadata:
+      labels:
+        app: files
+    spec:
+      containers:
+        - image: registry.gitlab.com/brandonfox/backend_final_project/files
+          imagePullPolicy: "Always"
+          name: files-deployment
+          env: 
+          - name: CORS_ALLOW
+            value: natwit442.xyz
+          volumeMounts:
+            - name: azurefileshare
+              mountPath: /home/node/code/uploads
+          ports:
+            - containerPort: 4000
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes:
+        - name: azurefileshare
+          persistentVolumeClaim:
+            claimName: google-fileclaim
+status: {}
