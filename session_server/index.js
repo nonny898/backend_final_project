@@ -16,7 +16,7 @@ client.on("error", function(error) {
 
 app.use(
     cors({
-      origin: 'http://localhost:5000', // restrict calls to those this address
+      origin: `http://${config.CORS_ALLOW}`, // restrict calls to those this address
       methods: 'GET', // only allow GET requests
       credentials: true,
     })
