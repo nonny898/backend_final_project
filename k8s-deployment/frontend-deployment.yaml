@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: frontend-deployment
+    labels:
+        app: frontend
+spec:
+    selector:
+        matchLabels:
+            app: frontend
+    template:
+        metadata:
+            labels:
+                app: frontend
+        spec:
+            containers:
+            -   name: frontend-deployment-server
+                image: registry.gitlab.com/brandonfox/backend_final_project/frontend
+                imagePullPolicy: Always
+                ports:
+                -   containerPort: 80
+
+                    

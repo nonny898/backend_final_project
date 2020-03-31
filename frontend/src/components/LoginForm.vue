@@ -1,14 +1,11 @@
 <template>
   <v-form id="login-form" @keydown.enter="login">
     <h2 class="signin">Sign in with these providers</h2>
-    <a href="/auth/google">
+    <a :href="googleAuth">
       <i class="fa-10x fab fa-facebook" style="color:blue"></i>
     </a>
-    <!-- <a @click="onGoogle()">
-      <i class="fa-10x fab fa-google-plus" style="color:red"></i>
-    </a>-->
-    <a href="http://localhost:3000/auth/google">
-      <i class="fa-10x fab fa-google-plus" style="color:red"></i>
+    <a :href="googleAuth">
+      <i class="fa-10x fab fa-google" style="color:red"></i>
     </a>
     <a href="/auth/google" style="display:flex">
       <img src="../assets/Mahidol_Logo.png" class="MUIC_logo" />
@@ -17,24 +14,11 @@
 </template>
 
 <script>
-// import loginService from "../services/login.service";
-// import axios from "axios";
+import config from "../services/app.config"
 export default {
-  mounted() {
-    // to get the cookie data whenever component is mounted.
-    // this.checkIfLoggedIn();
-  },
-  methods: {
-    // checkIfLoggedIn() {
-    //   axios.get("http://localhost:3000/auth/check").then(response => {
-    //     console.log(response.data);
-    //   });
-    // }
-    onGoogle() {
-      // window.open("http://localhost:3000/auth/google")
-      // axios.get("http://localhost:3000/auth/google").then(response => {
-      //   console.log(response.data);
-      // });
+  data: function() {
+    return {
+      googleAuth: `http://${config.OAUTH_ADDR}/auth/google`
     }
   }
 };

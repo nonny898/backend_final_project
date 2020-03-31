@@ -1,0 +1,25 @@
+version: "3"
+services:
+  api:
+    build:
+      context: .
+    image: backend-oauth
+    # image: mapringg/backend-oauth:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+    environment:
+      - CORS_DEBUG=localhost:8080
+      - REDIS_ADDR=redis:6379
+      - FRONTEND_ADDR=http://localhost:8080
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
+    networks:
+      - backend
+
+networks:
+  backend:

@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  redis:
+    image: redis
+  sockets:
+    build:
+        context: .
+    image: socket-server
+    environment:
+        - REDIS_HOST=redis
+        - CORS_ALLOW=localhost:8080
+    ports:
+        - 3500:3000
+    depends_on:
+        - redis

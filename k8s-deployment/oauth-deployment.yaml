@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: oauth-deployment
+    labels:
+        app: oauth
+spec:
+    selector:
+        matchLabels:
+            app: oauth
+    template:
+        metadata:
+            labels:
+                app: oauth
+        spec:
+            containers:
+            -   name: oauth-deployment-server
+                image: registry.gitlab.com/brandonfox/backend_final_project/oauth
+                imagePullPolicy: Always
+                env:
+                -   name: REDIS_ADDR
+                    value: redis-master
+                -   name: FRONTEND_ADDR
+                    value: http://natwit442.xyz
+                -   name: CORS_ALLOW
+                    value: natwit442.xyz
+                ports:
+                -   containerPort: 3000

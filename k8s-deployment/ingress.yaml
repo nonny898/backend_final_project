@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  creationTimestamp: "2020-03-30T15:48:47Z"
+  generation: 1
+  name: colab-editing
+  namespace: default
+  resourceVersion: "6147"
+  selfLink: /apis/extensions/v1beta1/namespaces/default/ingresses/colab-editing
+  uid: f19cd5d6-729d-11ea-b5d5-42010a9401ff
+spec:
+  backend:
+    serviceName: frontend-service
+    servicePort: 80
+  rules:
+  - host: oauth.natwit442.xyz
+    http:
+      paths:
+      - backend:
+          serviceName: oauth-service
+          servicePort: 80
+  - host: scktio.natwit442.xyz
+    http:
+      paths:
+      - backend:
+          serviceName: sessions-socket-service
+          servicePort: 80
+  - host: files.natwit442.xyz
+    http:
+        paths:
+        - backend:
+            serviceName: files-service
+            servicePort: 4000
+status:
+  loadBalancer: {}

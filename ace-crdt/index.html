@@ -51,12 +51,14 @@
       </p>
     </div>
 
-    <button onclick="createSession()">Create Session</button>
+    <button id="createSessionBtn" onclick="createSession()">Create Session</button>
+    <p id="session_id"></p>
 
     <p>Session ID</p>
     <div>
       <input type="text" id="sessionid">
-      <button onclick="joinSession(document.getElementById('sessionid').textContent)">Connect</button>
+      <button onclick="joinSession(document.getElementById('sessionid').value)">Connect</button>
+
     </div>
 
 
@@ -64,7 +66,8 @@
       <div id="editor"></div>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="/socket.io.js"></script>
     <script src="/ace.js"></script>
     <script src="/rga.js"></script>
     <script src="/editor.js"></script>

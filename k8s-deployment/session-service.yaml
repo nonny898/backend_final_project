@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sessions-socket-service
+  labels:
+    app: sessions
+spec:
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
+  type: NodePort
+  sessionAffinity: ClientIP
+  selector:
+    app: sessions
