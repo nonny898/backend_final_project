@@ -45,13 +45,11 @@ RGA.prototype = {
     ,
   receive: function (op) {
       return this[op.type].call(this, op)
-    }
+  },
 
-    ,
   downstream: function (op) {
-      const node = this.receive(op)
-      op.sender = this.id
-
+    op.sender = this.id
+    const node = this.receive(op)
       if (node) {
         this.subscribers.forEach(callback => {
           callback(op)
@@ -63,6 +61,28 @@ RGA.prototype = {
 
     // Private
     ,
+
+    cursorMove: function (op) {
+      this.subscribers.forEach(callback => {
+        callback({
+          type: "cursorRequest",
+          sender: this.id,
+          position: op.position,
+          // since: timestamp,
+          // sender: this.id,
+          // recipient: sender
+        })
+      })
+
+    },
+
+    cursorRequest: function () {
+
+    }
+
+    ,
+
+
   requestHistory: function () {
       this.subscribers.forEach(callback => {
         callback({
@@ -103,6 +123,7 @@ RGA.prototype = {
     ,
   add: function (op) {
       if (this.index.get(op.t)) {
+        
         return
       }
 
@@ -128,9 +149,13 @@ RGA.prototype = {
       this.index.set(op.t, newNode)
 
       return newNode
-    }
-
-    ,
+    },
+    
+    cursor: function(op) {
+      
+      return this.cursorMove(op)
+      
+    },
   remove: function (op) {
       const node = this.index.get(op.t)
 
@@ -285,7 +310,22 @@ RGA.AceEditorRGA = function AceEditorRGA(id, editor) {
     const {
       start,
       end
-    } = selection.getRange(), rgaAry = new RGAtoText(rga), doc = new Doc(rgaAry.text()), startIndex = doc.positionToIndex(start), startNode = rgaAry.get(startIndex), endIndex = doc.positionToIndex(end), endNode = rgaAry.get(endIndex)
+    } = selection.getRange(),
+     rgaAry = new RGAtoText(rga), 
+     doc = new Doc(rgaAry.text()), 
+     startIndex = doc.positionToIndex(start), 
+     startNode = rgaAry.get(startIndex), 
+     endIndex = doc.positionToIndex(end), 
+     endNode = rgaAry.get(endIndex)
+
+     
+
+      rga.downstream({
+        position: startIndex,
+        // t: rga.genTimestamp(),
+        type: 'cursor'
+      })
+    
 
     nodeSelection = {
       startNode: startNode,

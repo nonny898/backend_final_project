@@ -3,6 +3,8 @@
   <head>
     <title>Ace CRDT</title>
     <style>
+      @import url("/css/ace-collab-ext.min.css");
+
       html, body {
         height: 100%;
       }
@@ -35,6 +37,8 @@
     </style>
   </head>
   <body>
+    <script src="/ace.js"></script>
+    <script src="/umd/ace-collab-ext.js" type="text/javascript" charset="utf-8"></script>
     <div>
       <h1>Collaborative text editing using CRDT</h1>
       <p>
@@ -65,10 +69,10 @@
     <div id="editor-container">
       <div id="editor"></div>
     </div>
-
-
+    
     <script src="/socket.io.js"></script>
-    <script src="/ace.js"></script>
+    <script src="/app.config.js"></script>
+    
     <script src="/rga.js"></script>
     <script src="/editor.js"></script>
   </body>

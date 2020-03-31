@@ -21,12 +21,13 @@
   ],
   "license": "UNLICENSED",
   "dependencies": {
-    "ace-builds": "^1.2.6",
+    "ace-builds": "^1.4.8",
     "express": "^4.15.3",
     "socket.io-redis": "^5.2.0",
     "socketio": "^1.0.0"
   },
   "devDependencies": {
+    "@convergencelabs/ace-collab-ext": "^0.5.0",
     "nodemon": "^2.0.2"
   }
 }

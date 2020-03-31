@@ -1,14 +1,16 @@
-"use strict";
+// "use strict";
 
 const editor = ace.edit('editor')
+const curMgr = new AceCollabExt.AceMultiCursorManager(editor.getSession());
+
+const colors = ['orange', 'green', 'blue']
 editor.setTheme('ace/theme/monokai');
 
-const serveradr = '192.168.39.37:30113/'
 var session = editor.getSession()
 var doc = session.getDocument();
 
 session.setMode('ace/mode/javascript');
-session.setValue(`var you = 'are awesome;'`);
+// session.setValue(`var you = 'are awesome'`);
 
 var socket = null;
 var joined = null;
@@ -26,7 +28,7 @@ var createSession = function() {
   var xmlHttp = new XMLHttpRequest();
   console.log("Creating request to make session")
   xmlHttp.onreadystatechange = function() {
-    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) opensocket(xmlHttp.responseText, true)
+    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) opensocket(xmlHttp.responseText)
 
   }
   xmlHttp.open('GET', `http://${config.SESSION_ADDR}/create`, true);
@@ -38,38 +40,70 @@ function joinSession(path) {
     socket.removeAllListeners()
     socket.disconnect()
   }
-  opensocket(path, false)
+  opensocket(path, true)
 }
 
-function opensocket(url, isCreator) {
+function opensocket(url, joiner) {
   console.log("Opening socket on url " + url)
-  socket = io('ws://' + serveradr, {
+  socket = io('http://' + config.SESSION_ADDR, {
     query: 'session=' + url
   })
+
+
+  
   // This process is async that's why
   socket.on('init', ({
     id,
     history
   }) => {
     console.log("Got id " + id)
+
+    
+    
+      socket.emit('myId', `${id}`)
+      socket.on('myId', (id) => {
+        console.log('re ', id )
+        curMgr.addCursor(`${id}`, `User ${id}`, colors[id%3])
+      })
+    
+
     rga = new RGA.AceEditorRGA(id, editor)
 
     rga.subscribe(op => {
       socket.emit('message', op)
     })
 
-    socket.on('message', op => rga.receive(op))
-
-    // Only ask for the history when you joined the session
-    if (!isCreator) socket.emit('message', {
-      type: 'historyRequest'
+    socket.on('message', 
+    op => {
+      if (op.type === 'cursorRequest') makeCursorChange(op)
+      else rga.receive(op)})
+      
+    socket.emit('message', {
+        type: 'historyRequest',
+        sender: id
     })
-    // you are the creator save all text and commit the change to the history
-    else {
-      const allTexts = doc.getAllLines().join('\n');
+
+    const allTexts = doc.getAllLines().join('\n');
       session.setValue(allTexts)
-    }
+
     editor.focus()
   });
 }
+
+let notSet = true
+function makeCursorChange(op){
+
+  try {
+  curMgr.setCursor(`${op.sender}`, op.position);
+  }
+  catch(err) {
+    curMgr.addCursor(`${op.sender}`, `User ${op.sender}`, colors[op.sender%3])
+    curMgr.setCursor(`${op.sender}`, op.position);
+
+
+  }
+
+
+}
+
 editor.focus();

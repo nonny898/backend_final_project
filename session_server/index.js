@@ -51,6 +51,9 @@ io.on('connect', function(socket) {
       socket.broadcast.to(session).emit('message', op);
     });
     updateRoomConnections(session);
+        socket.on('myId', id => {
+          socket.broadcast.to(session).emit('myId', id);
+        })
   });
   socket.on('disconnect', function() {
     updateRoomConnections(session);

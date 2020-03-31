@@ -9,7 +9,7 @@ let session = editor.getSession()
 let doc = session.getDocument();
 
 session.setMode('ace/mode/javascript');
-session.setValue(`var you = 'are awesome;'`);
+session.setValue(`var you = 'are awesom;'`);
 
 let socket = null;
 
