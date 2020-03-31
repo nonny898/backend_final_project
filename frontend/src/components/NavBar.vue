@@ -1,6 +1,9 @@
 <template>
   <v-app-bar app color="primary" dark>
-    <div class="d-flex align-center" @click="toHome()" style="cursor: pointer;">
+    <div v-if="currentRoute === 'Main'" class="d-flex align-center" >
+      <h1>MUIC Code Colab</h1>
+    </div>
+    <div v-else class="d-flex align-center" @click="toHome()" style="cursor: pointer;">
       <h1>MUIC Code Colab</h1>
     </div>
     <v-spacer></v-spacer>
@@ -20,6 +23,7 @@ export default {
   },
   created() {
     this.currentRoute = this.$router.currentRoute.name;
+    console.log('Log: created -> this.currentRoute', this.$router.path);
     this.username = this.$cookies.get("username");
   },
   methods: {

@@ -203,10 +203,14 @@ export default {
   methods: {
     createSession: function() {
       console.log("Creating request to make session");
-      axios.get(`http://${config.SESSION_ADDR}/create`,{ headers: { userId: this.$cookies.userId } }).then(result => {
-        console.log("shit", result.data);
-        this.openConnection(result.data, true);
-      });
+      axios
+        .get(`http://${config.SESSION_ADDR}/create`, {
+          headers: { userId: this.$cookies.userId }
+        })
+        .then(result => {
+          console.log("shit", result.data);
+          this.openConnection(result.data, true);
+        });
     },
     // TODO : Make a text box so that ppl who want na join the session
     // can paste the sessoin id into
@@ -219,22 +223,27 @@ export default {
       this.users = 0;
       this.sessionId = "";
       this.connected = false;
-      this.rga.unsubscribe();
-      this.socket.disconnect(true);
+      if (this.rga !== undefined || this.rga !== null) {
+        this.rga.unsubscribe();
+        this.socket.disconnect(true);
+      }
     },
     openConnection: function(sessionId, isCreator) {
-      if(this.connected){
-        this.disconnect()
+      if (this.connected) {
+        this.disconnect();
       }
       console.log("Opening socket on url " + sessionId);
-      let socket = SocketIO(`http://${config.SESSION_ADDR}`,{
-        query: "session=" + sessionId
-      }, {forceNew: true});
+      let socket = SocketIO(
+        `http://${config.SESSION_ADDR}`,
+        {
+          query: "session=" + sessionId
+        },
+        { forceNew: true }
+      );
       this.socket = socket;
       this.socket.on("init", ({ id, history }) => {
         console.log("Got id " + id);
-        if(this.rga != undefined)
-          this.rga.unsubscribe()
+        if (this.rga != undefined) this.rga.unsubscribe();
         let rga = new RGA.AceEditorRGA(id, this.editor);
         this.rga = rga;
 
@@ -246,8 +255,8 @@ export default {
           this.users = connections;
         });
         this.socket.on("message", op => {
-          this.rga.receive(op)
-          console.log(op)
+          this.rga.receive(op);
+          console.log(op);
         });
         if (!isCreator)
           this.socket.emit("message", {
@@ -278,7 +287,7 @@ export default {
     },
     exit() {
       this.$cookies.remove("filePath");
-      this.disconnect();
+      // this.disconnect();
       this.$router.push("/");
     },
     save() {
