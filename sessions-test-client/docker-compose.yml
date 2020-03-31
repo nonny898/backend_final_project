@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  socket-client:
+    build:
+        context: .
+    image: socket-client-test
+    environment:
+        - SOCKET_SERVER=localhost:3000
+    ports:
+        - 3456:3456
