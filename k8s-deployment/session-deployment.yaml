@@ -5,6 +5,7 @@ metadata:
     labels:
         app: sessions
 spec:
+    replicas: 3
     selector:
         matchLabels:
             purpose: sessions

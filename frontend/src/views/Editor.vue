@@ -170,10 +170,8 @@ export default {
   methods: {
     createSession: function() {
       console.log("Creating request to make session");
-      axios.get(`http://${config.SESSION_ADDR}/create`).then(result => {
+      axios.get(`http://${config.SESSION_ADDR}/create`,{ headers: { userId: this.$cookies.userId } }).then(result => {
         console.log("shit", result.data);
-        this.connected = true;
-        this.sessionId = result.data;
         this.openConnection(result.data, true);
       });
     },
@@ -181,23 +179,23 @@ export default {
     // can paste the sessoin id into
     joinSession: function() {
       this.joinSessionDialog = false;
-      if (this.socket !== null) {
-        this.socket.removeAllListeners();
-        this.socket.disconnect();
-      }
       this.openConnection(this.joinSessionId, false);
     },
     disconnect: function() {
       this.users = 0;
       this.sessionId = "";
       this.connected = false;
+      this.rga.unsubscribe();
       this.socket.disconnect(true);
     },
     openConnection: function(sessionId, isCreator) {
+      if(this.connected){
+        this.disconnect()
+      }
       console.log("Opening socket on url " + sessionId);
-      let socket = SocketIO(`http://${config.SESSION_ADDR}`, {
+      let socket = SocketIO(`http://${config.SESSION_ADDR}`,{
         query: "session=" + sessionId
-      });
+      }, {forceNew: true});
       this.socket = socket;
       this.socket.on("init", ({ id, history }) => {
         console.log("Got id " + id);
@@ -211,7 +209,10 @@ export default {
         this.socket.on("connections", connections => {
           this.users = connections;
         });
-        this.socket.on("message", op => this.rga.receive(op));
+        this.socket.on("message", op => {
+          this.rga.receive(op)
+          console.log(op)
+        });
         if (!isCreator)
           this.socket.emit("message", {
             type: "historyRequest"
@@ -222,6 +223,8 @@ export default {
         }
         this.editor.focus();
       });
+      this.connected = true;
+      this.sessionId = sessionId;
     },
 
     editorInit: function(editor) {
