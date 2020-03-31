@@ -7,11 +7,11 @@ metadata:
 spec:
     selector:
         matchLabels:
-            app: sessions
+            purpose: sessions
     template:
         metadata:
             labels:
-                app: sessions
+                purpose: sessions
         spec:
             containers:
             -   name: sessions-socket-server
