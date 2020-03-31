@@ -15,6 +15,11 @@
             <v-icon>mdi-content-save</v-icon>
           </v-btn>
 
+          <v-btn value="favorites" @click="save()">
+            <span>Save</span>
+            <v-icon>mdi-content-save-all</v-icon>
+          </v-btn>
+
           <v-btn value="nearby" v-on="on" v-if="content !== original">
             <span>Exit</span>
             <v-icon>mdi-exit-to-app</v-icon>
@@ -60,6 +65,8 @@
 import axios from "axios";
 // import Session from "../services/editor";
 import config from "../services/app.config";
+import SocketIO from "socket.io-client";
+import RGA from "../services/rga";
 export default {
   name: "Editor",
   props: ["someUnrelatedVar"],
@@ -68,11 +75,17 @@ export default {
       content: "",
       original: "",
       dialog: false,
-      filePath: ""
+      filePath: "",
+      socket: null,
+      rga: null,
+      session: null,
+      doc: null,
+      editor: null
     };
   },
   created() {
     this.filePath = this.$route.params.file;
+    console.log('Log: created -> this.filePath', this.filePath);
     axios
       .get("http://" + config.BACKEND_ADDR + "/download", {
         params: {
@@ -91,8 +104,57 @@ export default {
     editor: require("vue2-ace-editor")
   },
   methods: {
+    createSession: function() {
+      console.log("Creating request to make session");
+      axios
+        .get(`http://${config.SESSION_ADDR}/create`)
+        .then(result => this.openConnection(result.data, true));
+    },
+    // TODO : Make a text box so that ppl who want na join the session 
+    // can paste the sessoin id into 
+    joinSession: function (path) {
+      if (this.socket !== null){
+        this.socket.removeAllListeners()
+        this.socket.disconnect()
+      }
+      this.openConnection(path, false)
+    },
+
+    openConnection: function(sessionId, isCreator)  {
+      console.log("Opening socket on url " + sessionId)
+    let socket = SocketIO(`http://${config.SESSION_ADDR}`,{
+    query: 'session=' + sessionId
+  })
+  this.socket = socket
+  this.socket.on('init', ({
+    id,
+    history
+  }) => {
+    console.log("Got id " + id)
+    let rga = new RGA.AceEditorRGA(id, this.editor)
+    this.rga = rga
+
+        this.rga.subscribe(op => {
+          this.socket.emit("message", op);
+        });
+
+        this.socket.on("message", op => this.rga.receive(op));
+        if (!isCreator)
+          this.socket.emit("message", {
+            type: "historyRequest"
+          });
+        else {
+          const allTexts = this.doc.getAllLines().join("\n");
+          this.session.setValue(allTexts);
+        }
+        this.editor.focus();
+      });
+    },
+
     editorInit: function(editor) {
-      console.log("Log: editor", editor);
+      this.editor = editor;
+      this.session = editor.getSession();
+      this.doc = this.session.getDocument();
       require("brace/ext/language_tools"); //language extension prerequsite...
       require("brace/mode/html");
       require("brace/mode/javascript"); //language
@@ -100,6 +162,7 @@ export default {
       require("brace/theme/monokai");
       require("brace/snippets/javascript"); //snippet
       require("../services/editor");
+      editor.focus();
     },
     exit() {
       this.$router.push("/");
@@ -124,7 +187,7 @@ export default {
       this.exit();
     },
     share() {
-      // Session.createSession();
+      this.createSession();
     }
   }
 };

@@ -4,15 +4,29 @@
     <v-container>
       <v-card width="90%" class="mx-auto">
         <v-list rounded>
-          <v-subheader inset>
-            <!-- <v-breadcrumbs :items="items"></v-breadcrumbs> -->
-            Folders
-            <v-spacer></v-spacer>
-            <div v-if="currentPath !== '/' ">
+          <v-subheader inset v-if="currentPath !== '/' " class="subheader-if">
+            <div class="back-button">
               <v-btn icon @click="previousPage(currentPath)">
                 <v-icon color="grey lighten-1">mdi-keyboard-backspace</v-icon>
               </v-btn>
-            </div>
+            </div>Folders
+            <v-spacer></v-spacer>
+
+            <v-btn small @click="previousPage(currentPath)" style="width: 170px;">
+              New Folder
+              <v-spacer></v-spacer>
+              <v-icon color="grey lighten-1">mdi-folder-plus</v-icon>
+            </v-btn>
+          </v-subheader>
+          <v-subheader inset v-else>
+            Folders
+            <v-spacer></v-spacer>
+
+            <v-btn small @click="previousPage(currentPath)" style="width: 170px;">
+              New Folder
+              <v-spacer></v-spacer>
+              <v-icon color="grey lighten-1">mdi-folder-plus</v-icon>
+            </v-btn>
           </v-subheader>
 
           <v-list-item
@@ -31,7 +45,16 @@
 
           <v-divider inset></v-divider>
 
-          <v-subheader inset>Files</v-subheader>
+          <v-subheader inset>Files
+
+            <v-spacer></v-spacer>
+
+            <v-btn small @click="previousPage(currentPath)" style="width: 170px;">
+              New File
+              <v-spacer></v-spacer>
+              <v-icon color="grey lighten-1">mdi-folder-plus</v-icon>
+            </v-btn>
+          </v-subheader>
 
           <v-list-item v-for="item in files" :key="item.title" @click="toEditor(item.title)">
             <v-list-item-avatar>
@@ -141,5 +164,17 @@ export default {
 #card-file-input {
   height: 25px;
   width: 60%;
+}
+.subheader-if {
+  margin: 0;
+  padding: 0;
+}
+.back-button {
+  display: flex;
+  width: 72px;
+  justify-content: center;
+}
+.v-btn__content{
+  width: 140px;
 }
 </style>

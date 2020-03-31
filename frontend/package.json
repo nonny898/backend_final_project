@@ -13,10 +13,11 @@
     "core-js": "^3.6.4",
     "eslint": "^5.16.0",
     "eslint-loader": "2.1.2",
+    "socket.io-client": "^2.3.0",
     "socket.io-redis": "^5.2.0",
-    "socketio": "^1.0.0",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
+    "vue-socket.io": "^3.0.7",
     "vuetify": "^2.2.11",
     "vuex": "^3.1.3"
   },
