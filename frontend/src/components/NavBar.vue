@@ -49,7 +49,7 @@ export default {
     },
     toHome() {
       this.$router.push({
-        name: "Main",
+        name: "Main"
       });
     }
   }

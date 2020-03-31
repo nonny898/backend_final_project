@@ -68,6 +68,11 @@
             <v-icon>mdi-content-save-edit</v-icon>
           </v-btn>
 
+          <v-btn @click="disconnect()">
+            <span>Disconnect</span>
+            <v-icon>mdi-access-point-network-off</v-icon>
+          </v-btn>
+
           <v-btn value="nearby" v-on="on" v-if="content !== original">
             <span>Exit</span>
             <v-icon>mdi-exit-to-app</v-icon>
@@ -162,15 +167,6 @@ export default {
   components: {
     editor: require("vue2-ace-editor")
   },
-  mounted: function() {
-    if (this.$route.params.sessionId) {
-      if (this.socket !== null) {
-        this.socket.removeAllListeners();
-        this.socket.disconnect();
-      }
-      this.openConnection(this.$route.params.sessionId, false);
-    }
-  },
   methods: {
     createSession: function() {
       console.log("Creating request to make session");
@@ -185,14 +181,18 @@ export default {
     // can paste the sessoin id into
     joinSession: function() {
       this.joinSessionDialog = false;
-      console.log(this.joinSessionId);
-      let routeData = this.$router.resolve({
-        name: "EditorSession",
-        params: { sessionId: this.joinSessionId }
-      });
-      window.open(routeData.href, "_blank");
+      if (this.socket !== null) {
+        this.socket.removeAllListeners();
+        this.socket.disconnect();
+      }
+      this.openConnection(this.joinSessionId, false);
     },
-
+    disconnect: function() {
+      this.users = 0;
+      this.sessionId = "";
+      this.connected = false;
+      this.socket.disconnect(true);
+    },
     openConnection: function(sessionId, isCreator) {
       console.log("Opening socket on url " + sessionId);
       let socket = SocketIO(`http://${config.SESSION_ADDR}`, {
