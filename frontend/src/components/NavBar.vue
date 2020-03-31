@@ -43,6 +43,7 @@ export default {
         params: { file: "/temp.txt" }
       });
     },
+    // TODO: Only allow the pages that is not the main page "/"
     toHome() {
       this.$router.push({
         name: "Main"

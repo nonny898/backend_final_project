@@ -20,9 +20,6 @@
           <v-btn v-if="connected" dark @click="snackbar = true">Show Session ID</v-btn>
         </v-col>
 
-        <!-- <v-toolbar-title> -->
-        <!-- <span v-if="connected === true" style="margin-right:10px">Connected</span> -->
-        <!-- <span v-else style="margin-right:10px">Disconnect</span> -->
         <v-col style="display: flex;justify-content: center;">
           <v-chip
             v-if="connected === true"
@@ -33,8 +30,6 @@
           >Connected</v-chip>
           <v-chip v-else small class="ma-2" color="red" text-color="white">Disconnect</v-chip>
         </v-col>
-
-        <!-- </v-toolbar-title> -->
 
         <v-col style="display: flex;justify-content: flex-end;align-items: center;">
           <v-avatar class="mx-2" color="white" size="30" v-if="connected === true">
@@ -142,7 +137,6 @@
 
 <script>
 import axios from "axios";
-// import Session from "../services/editor";
 import config from "../services/app.config";
 import SocketIO from "socket.io-client";
 import RGA from "../services/rga";
@@ -289,6 +283,7 @@ export default {
       require("../services/editor");
       editor.focus();
     },
+    // TODO: Make disconnect function work when null
     exit() {
       this.$cookies.remove("filePath");
       // this.disconnect();
