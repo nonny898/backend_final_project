@@ -22,7 +22,7 @@ spec:
             value: natwit442.xyz
           volumeMounts:
             - name: azurefileshare
-              mountPath: /home/node/code/uploads
+              mountPath: /home/node/code/files
           ports:
             - containerPort: 4000
       restartPolicy: Always

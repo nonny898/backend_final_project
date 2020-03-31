@@ -7,6 +7,8 @@ const env = require('./config');
 
 const app = express();
 
+const fsPath = `${process.cwd}/files/`
+
 app.use(
   cors({
     origin: `http://${env.CORS_ALLOW}`, // restrict calls to those this address
@@ -16,13 +18,8 @@ app.use(
 
 app.use(bodyParser.json());
 
-function isFolder(path) {
-  return new Promise(function(resolve, reject) {
-    fs.lstat(path, (err, stats) => {
-      if (err) reject(err.message);
-      else resolve(stats.isDirectory);
-    });
-  });
+function getUserDir(user){
+  return path.join(fsPath,user,'/')
 }
 
 // TODO Handle edge cases. Folder/file with same name etc
@@ -32,7 +29,7 @@ app.get('/upload', (req, res, next) => {
     res.status(401).send('Id not specified');
     return;
   }
-  const userDir = path.join(`${process.cwd()}/`, `${req.get('userId')}/`);
+  const userDir = getUserDir(req.get('userId'));
   fs.promises.mkdir(userDir, { recursive: true }).then(() => {
     const query = req.query.folders || '';
     const pth = userDir + query;
@@ -62,8 +59,7 @@ app.post('/upload', (req, res, next) => {
     return;
   }
   const uploadPath = path.join(
-    `${process.cwd()}/`,
-    `${req.get('userId')}/`,
+    getUserDir(req.get('userId')),
     req.body.uploadPath
   );
   console.log(`File path set to ${uploadPath}`);
@@ -93,7 +89,7 @@ app.get('/download', (req, res, next) => {
   if (req.get('userId') === undefined) {
     res.sendStatus(401);
   } else {
-    const userDir = path.join(`${process.cwd()}/`, `${req.get('userId')}/`);
+    const userDir = getUserDir(req.get('userId'));
     const query = req.query.uploadPath || '';
     const pth = userDir + query;
     fs.promises
