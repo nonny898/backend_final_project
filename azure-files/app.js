@@ -7,7 +7,7 @@ const env = require('./config');
 
 const app = express();
 
-const fsPath = `${process.cwd}/files/`
+const fsPath = `${process.cwd()}/files/`
 
 app.use(
   cors({
