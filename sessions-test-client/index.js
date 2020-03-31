@@ -8,9 +8,9 @@ const server = process.env.SOCKET_SERVER || 'localhost:3500'
 console.log("Server ip set to " + server)
 
 const connections = new Map()
-
+const id = "test-server"
 app.get('/create', function(req,res){
-    axios.get(`http://${server}/create`).then(response => {
+    axios.get(`http://${server}/create`,{headers: { userId: id }}).then(response => {
         connections.set(response.data,[])
         const testSocket = io(`ws://${server}`,{query: `session=${response.data}`})
         connections.get(response.data).push(testSocket)
@@ -21,9 +21,18 @@ app.get('/create', function(req,res){
     })
 })
 
+app.get('/')
+
 app.get('/checkrooms', function(req,res){
     console.log(connections.keys())
     res.send(connections.keys())
+})
+
+app.get('/close',function(req,res){
+    const ses = req.query.session
+    axios.post(`http://${server}/close`,{ userId: id, session: ses }).then(rep => {
+        res.send(rep.data)
+    }).catch(err => { res.status(500).send(err) })
 })
 
 app.get('/connect',function(req,res){
