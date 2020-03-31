@@ -31,7 +31,7 @@ var createSession = function() {
     if (xmlHttp.readyState == 4 && xmlHttp.status == 200) opensocket(xmlHttp.responseText)
 
   }
-  xmlHttp.open('GET', `http://${config.SESSION_ADDR}/create`, true);
+  xmlHttp.open('GET', `http://localhost:3000/create`, true);
   xmlHttp.send(null);
 };
 
@@ -45,7 +45,7 @@ function joinSession(path) {
 
 function opensocket(url, joiner) {
   console.log("Opening socket on url " + url)
-  socket = io('http://' + config.SESSION_ADDR, {
+  socket = io('http://' + 'localhost:3000', {
     query: 'session=' + url
   })
 
