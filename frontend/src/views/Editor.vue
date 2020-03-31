@@ -69,7 +69,7 @@
       lang="javascript"
       theme="monokai"
       width="100%"
-      height="100%"
+      height="calc(100% - 48px)"
     ></editor>
 
     <v-dialog v-model="joinSessionDialog" persistent max-width="400px">
