@@ -187,7 +187,7 @@ export default {
       this.joinSessionDialog = false;
       console.log(this.joinSessionId);
       let routeData = this.$router.resolve({
-        name: "Editor",
+        name: "EditorSession",
         params: { sessionId: this.joinSessionId }
       });
       window.open(routeData.href, "_blank");

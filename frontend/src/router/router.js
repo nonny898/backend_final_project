@@ -14,7 +14,7 @@ const router = new Router({
   routes: [
     {
       path: '/editor/:sessionId',
-      name: 'Editor',
+      name: 'EditorSession',
       component: Editor,
       props: true,
       meta: {
