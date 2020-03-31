@@ -45,14 +45,14 @@
 
           <v-divider inset></v-divider>
 
-          <v-subheader inset>Files
+          <v-subheader inset style="margin-top: 8px;">Files
 
             <v-spacer></v-spacer>
 
             <v-btn small @click="previousPage(currentPath)" style="width: 170px;">
               New File
               <v-spacer></v-spacer>
-              <v-icon color="grey lighten-1">mdi-folder-plus</v-icon>
+              <v-icon color="grey lighten-1">mdi-file-plus</v-icon>
             </v-btn>
           </v-subheader>
 
