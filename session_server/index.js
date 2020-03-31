@@ -30,9 +30,9 @@ function statusKey(session) {
 // clients number. If server goes down disconnect function is never called. Consider replacing with
 // a heartbeat function to check number of connected clients
 
-function updateRoomConnections(room){
-  if(io.sockets.adapter.rooms[room] != undefined)
-    io.in(room).emit('connections',io.sockets.adapter.rooms[room].length)
+function updateRoomConnections(room) {
+  if (io.sockets.adapter.rooms[room] != undefined)
+    io.in(room).emit('connections', io.sockets.adapter.rooms[room].length);
 }
 
 io.on('connect', function(socket) {
@@ -43,19 +43,21 @@ io.on('connect', function(socket) {
     else {
       socket.join(session);
       client.incr('id', function(err, nextid) {
-        console.log(io.sockets.adapter.rooms[session].length + " clients connected to " + session)
+        console.log(
+          `${io.sockets.adapter.rooms[session].length} clients connected to ${session}`
+        );
         socket.emit('init', { id: nextid });
-        
+
         socket.on('message', op => {
           socket.broadcast.to(session).emit('message', op);
         });
-        updateRoomConnections(session)
+        updateRoomConnections(session);
       });
       client.incr(session, function(err, connected) {
         // console.log(`${session} has ${connected} connections`);
       });
       socket.on('disconnect', function() {
-        updateRoomConnections(session)
+        updateRoomConnections(session);
         disconnectSession(session);
       });
     }
@@ -82,9 +84,9 @@ var deleteSession = function(path) {
   client.set(statusKey(path), 'false');
 };
 
-app.get('/', (req,res) => {
-  res.send("ok")
-})
+app.get('/', (req, res) => {
+  res.send('ok');
+});
 
 app.get('/create', (req, res) => {
   const sesName = uuidv4();
@@ -93,11 +95,10 @@ app.get('/create', (req, res) => {
   });
 });
 
-app.get('/list', (req,res) => {
-  res.send(io.sockets.adapter.rooms)
-})
+app.get('/list', (req, res) => {
+  res.send(io.sockets.adapter.rooms);
+});
 
-
-http.listen(3000, function() {
-  console.log('Listening on *:3000');
+http.listen(3500, function() {
+  console.log('Listening on *:3500');
 });

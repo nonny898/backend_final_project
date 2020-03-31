@@ -4,7 +4,16 @@
       <h1>MUIC Code Colab</h1>
     </div>
     <v-spacer></v-spacer>
-    <v-btn v-if="this.currentRoute === 'Main'" class="mr-6" @click="toEditor()">Go To Editor</v-btn>
+    <span v-if="connected === true" style="margin-right:10px">Connected</span>
+    <span v-if="sessionId !== ''" style="margin-right:10px"
+      >Session Id: {{ sessionId }}</span
+    >
+    <span v-if="connected === true">User: {{ users }}</span>
+    <v-spacer></v-spacer>
+
+    <v-btn v-if="this.currentRoute === 'Main'" class="mr-6" @click="toEditor()"
+      >Go To Editor</v-btn
+    >
     <v-btn @click="logout()">Logout</v-btn>
   </v-app-bar>
 </template>
@@ -18,6 +27,7 @@ export default {
       currentRoute: ""
     };
   },
+  props: ["sessionId", "connected", "users"],
   created() {
     this.currentRoute = this.$router.currentRoute.name;
   },

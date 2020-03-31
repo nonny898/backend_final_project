@@ -1,18 +1,23 @@
 <template>
   <div>
-    <NavBar />
+    <NavBar sessionId="" connected="false" />
     <v-container>
       <v-card width="90%" class="mx-auto">
         <v-list rounded>
-          <v-subheader inset v-if="currentPath !== '/' " class="subheader-if">
+          <v-subheader inset v-if="currentPath !== '/'" class="subheader-if">
             <div class="back-button">
               <v-btn icon @click="previousPage(currentPath)">
                 <v-icon color="grey lighten-1">mdi-keyboard-backspace</v-icon>
               </v-btn>
-            </div>Folders
+            </div>
+            Folders
             <v-spacer></v-spacer>
 
-            <v-btn small @click="previousPage(currentPath)" style="width: 170px;">
+            <v-btn
+              small
+              @click="previousPage(currentPath)"
+              style="width: 170px;"
+            >
               New Folder
               <v-spacer></v-spacer>
               <v-icon color="grey lighten-1">mdi-folder-plus</v-icon>
@@ -22,7 +27,11 @@
             Folders
             <v-spacer></v-spacer>
 
-            <v-btn small @click="previousPage(currentPath)" style="width: 170px;">
+            <v-btn
+              small
+              @click="previousPage(currentPath)"
+              style="width: 170px;"
+            >
               New Folder
               <v-spacer></v-spacer>
               <v-icon color="grey lighten-1">mdi-folder-plus</v-icon>
@@ -45,18 +54,27 @@
 
           <v-divider inset></v-divider>
 
-          <v-subheader inset style="margin-top: 8px;">Files
+          <v-subheader inset style="margin-top: 8px;"
+            >Files
 
             <v-spacer></v-spacer>
 
-            <v-btn small @click="previousPage(currentPath)" style="width: 170px;">
+            <v-btn
+              small
+              @click="previousPage(currentPath)"
+              style="width: 170px;"
+            >
               New File
               <v-spacer></v-spacer>
               <v-icon color="grey lighten-1">mdi-file-plus</v-icon>
             </v-btn>
           </v-subheader>
 
-          <v-list-item v-for="item in files" :key="item.title" @click="toEditor(item.title)">
+          <v-list-item
+            v-for="item in files"
+            :key="item.title"
+            @click="toEditor(item.title)"
+          >
             <v-list-item-avatar>
               <i class="fas fa-file-alt"></i>
             </v-list-item-avatar>
@@ -174,7 +192,7 @@ export default {
   width: 72px;
   justify-content: center;
 }
-.v-btn__content{
+.v-btn__content {
   width: 140px;
 }
 </style>

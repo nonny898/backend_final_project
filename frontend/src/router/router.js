@@ -13,12 +13,21 @@ const router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/editor',
+      path: '/editor/:sessionId',
       name: 'Editor',
       component: Editor,
       props: true,
       meta: {
       requiresAuth: true,
+      }
+    },
+    {
+      path: '/editor',
+      name: 'Editor',
+      component: Editor,
+      props: true,
+      meta: {
+        requiresAuth: true,
       }
     },
     {
