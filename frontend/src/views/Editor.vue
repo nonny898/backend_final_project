@@ -249,6 +249,10 @@ export default {
           this.rga.receive(op)
           console.log(op)
         });
+        this.socket.on("gtfo",status => {
+          //TODO Do something with this status
+          this.disconnect()
+        })
         if (!isCreator)
           this.socket.emit("message", {
             type: "historyRequest"

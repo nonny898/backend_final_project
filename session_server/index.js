@@ -7,14 +7,13 @@ const redis = require('redis');
 const redisAdapter = require('socket.io-redis');
 const config = require('./config');
 const client = redis.createClient({ host: config.REDIS_HOST, port: 6379 });
+const parser = require('body-parser')
 
 io.adapter(redisAdapter({ host: config.REDIS_HOST, port: 6379 }));
 client.on('error', function(error) {
   console.error(error);
 });
-
-console.log(io.nsps)
-
+app.use(parser.json())
 app.use(
   cors({
     origin: `http://${config.CORS_ALLOW}`, // restrict calls to those this address
@@ -24,10 +23,6 @@ app.use(
 );
 
 // TODO Assign host to session and ability to completely close room
-
-function getRedisChannel(room){
-  return `socket.io-request#/#`
-}
 
 function updateRoomConnections(room) {
   io.sockets.adapter.clients([room],function(err,result){
@@ -51,9 +46,9 @@ io.on('connect', function(socket) {
       socket.broadcast.to(session).emit('message', op);
     });
     updateRoomConnections(session);
-  });
-  socket.on('disconnect', function() {
-    updateRoomConnections(session);
+    socket.on('disconnect', function() {
+      updateRoomConnections(session);
+    });
   });
 });
 
@@ -68,9 +63,27 @@ app.get('/create', (req, res) => {
   }
   else{
     const sesName = uuidv4();
-    res.send(sesName);
+    client.set(sesName,id,(err,reply) => {
+      if(err) res.status(500).send(err.message)
+      else res.send(sesName)
+    })
   }
 });
+
+app.post('/close',(req,res) => {
+  if(req.body == undefined){
+    res.sendStatus(400)
+  }
+  const id = req.body.userId
+  const session = req.body.session
+  if(id == undefined || session == undefined){
+    res.sendStatus(401)
+  }
+  else{
+    io.in(session).emit('gtfo','Session closed')
+    res.send('ok')
+  }
+})
 
 app.get('/list', (req, res) => {
   res.send(io.sockets.adapter.rooms);
