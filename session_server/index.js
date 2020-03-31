@@ -99,6 +99,6 @@ app.get('/list', (req, res) => {
   res.send(io.sockets.adapter.rooms);
 });
 
-http.listen(3500, function() {
-  console.log('Listening on *:3500');
+http.listen(3000, function() {
+  console.log('Listening on *:3000');
 });
