@@ -1,6 +1,6 @@
 <template>
   <v-app-bar app color="primary" dark>
-    <div class="d-flex align-center">
+    <div class="d-flex align-center" @click="toHome()" style="cursor: pointer;">
       <h1>MUIC Code Colab</h1>
     </div>
     <v-spacer></v-spacer>
@@ -44,7 +44,12 @@ export default {
     toEditor() {
       this.$router.push({
         name: "Editor",
-        params: { file: "/" }
+        params: { file: "/temp.txt" }
+      });
+    },
+    toHome() {
+      this.$router.push({
+        name: "Main",
       });
     }
   }

@@ -15,7 +15,7 @@
 
             <v-btn
               small
-              @click="previousPage(currentPath)"
+              @click.stop="dialogFolder = true"
               style="width: 170px;"
             >
               New Folder
@@ -29,7 +29,7 @@
 
             <v-btn
               small
-              @click="previousPage(currentPath)"
+              @click.stop="dialogFolder = true"
               style="width: 170px;"
             >
               New Folder
@@ -59,11 +59,7 @@
 
             <v-spacer></v-spacer>
 
-            <v-btn
-              small
-              @click="previousPage(currentPath)"
-              style="width: 170px;"
-            >
+            <v-btn small dark @click.stop="dialogFile = true" style="width: 170px;">
               New File
               <v-spacer></v-spacer>
               <v-icon color="grey lighten-1">mdi-file-plus</v-icon>
@@ -91,6 +87,58 @@
           </v-list-item>
         </v-list>
       </v-card>
+      <v-dialog v-model="dialogFolder" max-width="290" persistent>
+        <v-card>
+          <v-card-title class="headline"
+            >Add a new folder?</v-card-title
+          >
+
+          <v-card-text>
+            <v-text-field
+              label="Folder Name"
+              v-model="newFolderName"
+            ></v-text-field>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn color="red darken-1" text @click="dialogFolder = false">
+              Close
+            </v-btn>
+
+            <v-btn color="grey darken-1" text outlined @click="newFolder(newFolderName)">
+              Add
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="dialogFile" max-width="290" persistent>
+        <v-card>
+          <v-card-title class="headline"
+            >Add a new file?</v-card-title
+          >
+
+          <v-card-text>
+            <v-text-field
+              label="File Name"
+              v-model="newFileName"
+            ></v-text-field>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn color="red darken-1" text @click="dialogFile = false">
+              Close
+            </v-btn>
+
+            <v-btn color="grey darken-1" text outlined @click="newFile(newFileName)">
+              Add
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
   </div>
 </template>
@@ -120,7 +168,11 @@ export default {
         disabled: true,
         href: "breadcrumbs_link_2"
       }
-    ]
+    ],
+    dialogFile: false,
+    dialogFolder: false,
+    newFileName: "",
+    newFolderName: "",
   }),
   mounted() {
     this.getFoldersAndFiles();
@@ -134,19 +186,20 @@ export default {
         .get("http://" + config.BACKEND_ADDR + "/upload", {
           params: {
             folders: this.currentPath
-          }
+          },
+          headers: { userId: this.$cookies.get("userId") }
         })
         .then(result => {
           const files = [];
           const folders = [];
           result.data.forEach(element => {
-            if (element.includes(".")) {
+            if (!element.includes("/")) {
               files.push({
                 title: element
               });
             } else {
               folders.push({
-                title: element
+                title: element.split("/")[0]
               });
             }
           });
@@ -173,6 +226,50 @@ export default {
         name: "Editor",
         params: { file: this.currentPath + file }
       });
+    },
+    newFile(filename) {
+      this.dialogFile = false;
+      axios
+        .post(
+          "http://" + config.BACKEND_ADDR + "/upload",
+          {
+            type: "file",
+            uploadPath: this.currentPath + filename,
+            data: ""
+          },
+          { headers: { userId: this.$cookies.get("userId") } }
+        )
+        .then(
+          response => {
+            this.newFileName = ""
+            this.getFoldersAndFiles();
+          },
+          error => {
+            console.log(error);
+          }
+        );
+    },
+    newFolder(folderName) {
+      this.dialogFolder = false;
+      axios
+        .post(
+          "http://" + config.BACKEND_ADDR + "/upload",
+          {
+            type: "folder",
+            uploadPath: this.currentPath + folderName,
+            data: ""
+          },
+          { headers: { userId: this.$cookies.get("userId") } }
+        )
+        .then(
+          response => {
+            this.newFolderName = ""
+            this.getFoldersAndFiles();
+          },
+          error => {
+            console.log(error);
+          }
+        );
     }
   }
 };
@@ -185,7 +282,7 @@ export default {
 }
 .subheader-if {
   margin: 0;
-  padding: 0;
+  padding: 0 16px 0 0;
 }
 .back-button {
   display: flex;

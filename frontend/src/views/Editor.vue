@@ -53,6 +53,16 @@
             <v-icon>mdi-content-save</v-icon>
           </v-btn>
 
+          <!-- <v-btn v-if="this.filePath === '/temp.txt'" value="favorites" disabled @click="save()">
+            <span>Save</span>
+            <v-icon>mdi-content-save</v-icon>
+          </v-btn> -->
+
+          <!-- <v-btn v-else value="favorites" @click="save()">
+            <span>Save</span>
+            <v-icon>mdi-content-save</v-icon>
+          </v-btn> -->
+
           <v-btn value="favorites" @click="save()">
             <span>Save As</span>
             <v-icon>mdi-content-save-edit</v-icon>
@@ -122,7 +132,7 @@ export default {
       content: "",
       original: "",
       dialog: false,
-      filePath: "",
+      filePath: "/",
       socket: null,
       rga: null,
       session: null,
@@ -138,7 +148,8 @@ export default {
       .get("http://" + config.BACKEND_ADDR + "/download", {
         params: {
           uploadPath: this.filePath
-        }
+        },
+        headers: { userId: this.$cookies.get("userId") }
       })
       .then(result => {
         this.content = result.data;
@@ -231,10 +242,15 @@ export default {
     },
     save() {
       axios
-        .post("http://" + config.BACKEND_ADDR + "/upload", {
-          uploadPath: this.filePath,
-          data: this.content
-        })
+        .post(
+          "http://" + config.BACKEND_ADDR + "/upload",
+          {
+            type: "file",
+            uploadPath: this.filePath,
+            data: this.content
+          },
+          { headers: { userId: this.$cookies.get("userId") } }
+        )
         .then(
           response => {
             this.original = this.content;
