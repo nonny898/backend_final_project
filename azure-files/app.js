@@ -16,58 +16,64 @@ app.use(
 
 app.use(bodyParser.json());
 
-if (!fs.existsSync(path.join(process.cwd(), 'uploads'))) {
-  fs.mkdirSync(path.join(process.cwd(), 'uploads'));
+function isFolder(path){
+  return new Promise(function(resolve,reject) {
+    fs.lstat(path,(err,stats) => {
+      if(err) reject(err.message)
+      else resolve(stats.isDirectory)
+    })
+  })
 }
 
+//TODO Handle edge cases. Folder/file with same name etc
+
 app.get('/upload', (req, res, next) => {
-  if (req.query.folders) {
-    const folders = req.query.folders.split('/');
-    fs.readdir(
-      path.join(process.cwd(), 'uploads', ...folders),
-      (err, files) => {
-        if (err) {
-          res.status(404).end();
-        }
-        res.send(files);
-      }
-    );
-  } else {
-    fs.readdir(path.join(process.cwd(), 'uploads'), (err, files) => {
-      if (err) {
-        res.status(404).end();
-      }
-      res.send(files);
-    });
+  if(req.get('userId') == undefined){
+    res.status(401).send('Id not specified')
+    return
   }
+  const userDir = path.join(process.cwd() + '/',req.get("userId") + '/')
+  fs.promises.mkdir(userDir,{recursive: true}).then(() =>{
+    const query = req.query.folders || ""
+    const pth = userDir + query
+    fs.promises.readdir(pth).then((files) => {
+      console.log(files)
+      Promise.all(files.map((f) => fs.promises.lstat(pth + f))).then((result) => {
+        let directories = result.map((lstat) => lstat.isDirectory())
+        directories.map((isdir, index) => {
+          if(isdir) files[index] += '/'
+        })
+        res.send(files)
+      }).catch((err) => res.status(500).send(err.message))
+    }).catch((err) => {res.status(404).send(err)})
+  })
 });
 
+
 app.post('/upload', (req, res, next) => {
-  if (!req.body.uploadPath.includes('/')) {
-    const filename = req.body.uploadPath;
-    fs.writeFile(
-      path.join(process.cwd(), 'uploads', filename),
-      req.body.data,
-      () => {
-        res.end();
-      }
-    );
-  } else {
-    const uploadPath = req.body.uploadPath.split('/');
-    const filename = uploadPath.pop();
-    const folders = Array.from(uploadPath);
-    if (!fs.existsSync(path.join(process.cwd(), 'uploads', ...folders))) {
-      fs.mkdirSync(path.join(process.cwd(), 'uploads', ...folders), {
-        recursive: true,
-      });
-    }
-    fs.writeFile(
-      path.join(process.cwd(), 'uploads', ...folders, filename),
-      req.body.data,
-      () => {
-        res.end();
-      }
-    );
+  if(req.get('userId') == undefined){
+    res.status(401).send("No id specified")
+    return
+  }
+  const uploadPath = path.join(process.cwd() + '/',req.get("userId") + "/",req.body.uploadPath)
+  console.log("File path set to " + uploadPath)
+  if(req.body.type === 'folder'){
+    fs.mkdir(uploadPath, {
+      recursive: true,
+    }, (err) => {
+      if(err) res.status(400).send(err.message)
+      else res.send("Ok")
+    })
+  }
+  else if(req.body.type === 'file'){
+    pth = uploadPath
+    fs.writeFile(pth,req.body.data || "",(err) => {
+      if(err) res.status(500).send(err.message)
+      else  res.send("Ok")
+    })
+  }
+  else{
+    res.status(400).send("Invalid type")
   }
 });
 

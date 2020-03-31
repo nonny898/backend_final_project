@@ -1,7 +1,9 @@
 version: "3"
 services:
   api:
-    image: registry.gitlab.com/brandonfox/backend_final_project/files
+    build:
+      context: .
+    image: files-server
     ports:
       - "4000:4000"
     environment: 
