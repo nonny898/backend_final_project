@@ -194,6 +194,10 @@ export default {
   components: {
     editor: require("vue2-ace-editor")
   },
+  beforeRouteLeave(to,from,next){
+    this.disconnect()
+    next()
+  },
   methods: {
     createSession: function() {
       console.log("Creating request to make session");
@@ -217,10 +221,11 @@ export default {
       this.users = 0;
       this.sessionId = "";
       this.connected = false;
-      if (this.rga !== undefined || this.rga !== null) {
+      if (this.rga)
         this.rga.unsubscribe();
+      if(this.socket)
         this.socket.disconnect(true);
-      }
+      console.log("Disconnected")
     },
     openConnection: function(sessionId, isCreator) {
       if (this.connected) {
@@ -280,13 +285,12 @@ export default {
       require("brace/mode/less");
       require("brace/theme/monokai");
       require("brace/snippets/javascript"); //snippet
-      require("../services/editor");
       editor.focus();
     },
     // TODO: Make disconnect function work when null
     exit() {
       this.$cookies.remove("filePath");
-      // this.disconnect();
+      this.disconnect();
       this.$router.push("/");
     },
     save() {
