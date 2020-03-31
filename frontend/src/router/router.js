@@ -51,6 +51,7 @@ router.beforeEach((to, from, next) => {
       .then(resp => {
           if (resp.data.user) {
             Vue.$cookies.set('userId', resp.data.user.id);
+            Vue.$cookies.set('username', resp.data.user.name);
             next();
             return;
           }
