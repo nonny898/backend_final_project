@@ -78,18 +78,29 @@ app.post('/upload', (req, res, next) => {
 });
 
 app.get('/download', (req, res, next) => {
-  const uploadPath = req.query.uploadPath.split('/');
-  const pathToFile = path.join(process.cwd(), 'uploads', ...uploadPath);
-  const readStream = fs.createReadStream(pathToFile);
-  // This will wait until we know the readable stream is actually valid before piping
-  readStream.on('open', () => {
-    // This just pipes the read stream to the response object (which goes to the client)
-    readStream.pipe(res);
-  });
-  // This catches any errors that happen while creating the readable stream (usually invalid names)
-  readStream.on('error', err => {
-    res.end(err);
-  });
+  if(req.get("userId") == undefined){
+    res.sendStatus(401)
+  }
+  else{
+    const userDir = path.join(process.cwd() + '/',req.get("userId") + '/')
+    const query = req.query.uploadPath || ""
+    const pth = userDir + query
+    fs.promises.lstat(pth).then((stat) => {
+      if(stat.isFile()){
+        const readStream = fs.createReadStream(pth);
+        // This will wait until we know the readable stream is actually valid before piping
+        readStream.on('open', () => {
+          // This just pipes the read stream to the response object (which goes to the client)
+          readStream.pipe(res);
+        });
+        // This catches any errors that happen while creating the readable stream (usually invalid names)
+        readStream.on('error', err => {
+          res.end(err);
+        });
+      }
+      else res.status(400).send(req.query.uploadPath + " is a folder")
+    }).catch((err) => {res.status(500).send(err.message)})
+  }
 });
 
 app.get('/',(req,res) => {
