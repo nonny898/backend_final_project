@@ -199,6 +199,8 @@ export default {
       this.socket = socket;
       this.socket.on("init", ({ id, history }) => {
         console.log("Got id " + id);
+        if(this.rga != undefined)
+          this.rga.unsubscribe()
         let rga = new RGA.AceEditorRGA(id, this.editor);
         this.rga = rga;
 

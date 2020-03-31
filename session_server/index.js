@@ -13,6 +13,8 @@ client.on('error', function(error) {
   console.error(error);
 });
 
+console.log(io.nsps)
+
 app.use(
   cors({
     origin: `http://${config.CORS_ALLOW}`, // restrict calls to those this address
@@ -24,16 +26,14 @@ app.use(
 // TODO Assign host to session and ability to completely close room
 
 function getRedisChannel(room){
-  return `socket.io#default#${room}#`
+  return `socket.io-request#/#`
 }
 
 function updateRoomConnections(room) {
-  if (io.sockets.adapter.rooms[room] != undefined){
-    client.pubsub('NUMSUB', getRedisChannel(room),function(err,result){
-      io.in(room).emit('connections', io.sockets.adapter.rooms[room].length);
-      console.log(room + ' has ' + io.sockets.adapter.rooms[room].length + ' connections')
-    })
-  }
+  io.sockets.adapter.clients([room],function(err,result){
+    io.in(room).emit('connections', result.length);
+    console.log(room + ' has ' + result.length + ' connections')
+  })
 }
 
 io.on('connect', function(socket) {
