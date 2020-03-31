@@ -1,31 +1,100 @@
 <template>
-  <v-form id="login-form" @keydown.enter="login">
-    <h2 class="signin">Sign in with these providers</h2>
-    <a :href="googleAuth">
-      <i class="fa-10x fab fa-facebook" style="color:blue"></i>
-    </a>
-    <a :href="googleAuth">
-      <i class="fa-10x fab fa-google" style="color:red"></i>
-    </a>
-    <a href="/auth/google" style="display:flex">
-      <img src="../assets/Mahidol_Logo.png" class="MUIC_logo" />
-    </a>
-  </v-form>
+  <v-card shaped style="width: 30%;">
+    <v-card-title style="justify-content: center;">
+      <h1 class="signin">User Login</h1>
+    </v-card-title>
+    <v-card-subtitle style="display: flex; justify-content: center; padding-top: 24px;">
+      <h3>Login with one of these available social accounts...</h3>
+    </v-card-subtitle>
+    <v-card-text>
+      <v-container>
+        <v-row>
+          <v-col cols="12">
+            <v-btn
+              depressed
+              block
+              dark
+              :href="googleAuth"
+              style="justify-content: end; padding-left: 38%;"
+            >
+              <i class="fa-2x fab fa-github mr-3"></i>
+              Github
+            </v-btn>
+          </v-col>
+          <v-col cols="12">
+            <v-btn
+              depressed
+              block
+              dark
+              color="pink"
+              :href="googleAuth"
+              style="justify-content: end; padding-left: 38%;"
+            >
+              <i class="fa-2x fab fa-instagram mr-3"></i>
+              Instagram
+            </v-btn>
+          </v-col>
+          <v-col cols="12">
+            <v-btn
+              depressed
+              block
+              dark
+              color="indigo darken-1"
+              :href="googleAuth"
+              style="justify-content: end; padding-left: 38%;"
+            >
+              <i class="fa-2x fab fa-facebook mr-3"></i>
+              Facebook
+            </v-btn>
+          </v-col>
+          <v-col cols="12">
+            <v-btn
+              depressed
+              block
+              dark
+              color="green lighten-1"
+              :href="googleAuth"
+              style="justify-content: end; padding-left: 38%;"
+            >
+              <i class="fa-2x fab fa-google mr-3"></i>
+              Google
+            </v-btn>
+          </v-col>
+          <v-col cols="12">
+            <v-btn
+              depressed
+              block
+              dark
+              color="blue lighten-1"
+              :href="googleAuth"
+              style="justify-content: end; padding-left: 38%;"
+            >
+              <i class="fa-2x fab fa-linkedin mr-3"></i>
+              LinkedIn
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
-import config from "../services/app.config"
+import config from "../services/app.config";
 export default {
   data: function() {
     return {
       googleAuth: `http://${config.OAUTH_ADDR}/auth/google`
-    }
+    };
   }
 };
 </script>
 
 <style scoped>
-#login-form {
+.v-btn__content {
+  margin-left: 37% !important;
+}
+/* #login-form {
   display: grid;
   grid-template-areas:
     "signin signin signin"
@@ -53,5 +122,9 @@ export default {
   width: 158px;
   height: 160px;
   grid-area: github;
-}
+} */
 </style>
+
+/*
+cd ..\azure-files\; docker-compose up --build -d; cd ..\backend-oauth\; docker-compose up --build -d; cd ..\session_server\; docker-compose up --build -d; cd ..\frontend\; npm i; npm run serve
+*/
