@@ -1,0 +1,10 @@
+apiVersion: cloud.google.com/v1beta1
+kind: BackendConfig
+metadata:
+  name: session-backend-config
+spec:
+  timeoutSec: 1800
+  connectionDraining:
+    drainingTimeoutSec: 1800
+  sessionAffinity:
+    affinityType: "CLIENT_IP"

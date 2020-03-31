@@ -1,7 +1,5 @@
 FROM node:alpine
 
-USER node
-
 RUN mkdir /home/node/code
 
 WORKDIR /home/node/code

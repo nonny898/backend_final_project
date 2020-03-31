@@ -40,7 +40,11 @@ RGA.prototype = {
     ,
   subscribe: function (callback) {
       this.subscribers.push(callback)
-    }
+    },
+
+  unsubscribe: function(){
+    this.subscribers = []
+  }
 
     ,
   receive: function (op) {
@@ -364,6 +368,9 @@ RGA.AceEditorRGA = function AceEditorRGA(id, editor) {
 
   this.subscribe = (sub) => {
     rga.subscribe(sub)
+  }
+  this.unsubscribe = () => {
+    rga.unsubscribe()
   }
 }
 

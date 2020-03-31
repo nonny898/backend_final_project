@@ -10,6 +10,7 @@ kubectl apply -f ./google-fileshare.yaml
 kubectl apply -f ./google-fileshare-claim.yaml
 
 kubectl apply -f ./session-deployment.yaml
+kubectl apply -f ./session-backend-config.yaml
 kubectl apply -f ./session-service.yaml
 
 kubectl apply -f ./oauth-deployment.yaml

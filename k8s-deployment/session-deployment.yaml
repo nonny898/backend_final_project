@@ -5,13 +5,14 @@ metadata:
     labels:
         app: sessions
 spec:
+    replicas: 3
     selector:
         matchLabels:
-            app: sessions
+            purpose: sessions
     template:
         metadata:
             labels:
-                app: sessions
+                purpose: sessions
         spec:
             containers:
             -   name: sessions-socket-server
