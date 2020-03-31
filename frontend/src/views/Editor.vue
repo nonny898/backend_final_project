@@ -107,6 +107,16 @@ export default {
 
       
     },
+    // TODO : Make a text box so that ppl who want na join the session 
+    // can paste the sessoin id into 
+    joinSession: function (path) {
+      if (this.socket !== null){
+        this.socket.removeAllListeners()
+        this.socket.disconnect()
+      }
+      this.openConnection(path, false)
+    },
+
     openConnection: function(sessionId, isCreator)  {
       console.log("Opening socket on url " + sessionId)
     let socket = SocketIO(`http://${config.SESSION_ADDR}`,{
