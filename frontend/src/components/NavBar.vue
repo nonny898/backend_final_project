@@ -32,7 +32,10 @@ export default {
         });
     },
     toEditor() {
-      this.$router.push("/editor");
+      this.$router.push({
+        name: "Editor",
+        params: { file: "/" }
+      });
     }
   }
 };

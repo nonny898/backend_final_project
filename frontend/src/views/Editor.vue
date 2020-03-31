@@ -16,8 +16,8 @@
           </v-btn>
 
           <v-btn value="favorites" @click="save()">
-            <span>Save</span>
-            <v-icon>mdi-content-save-all</v-icon>
+            <span>Save As</span>
+            <v-icon>mdi-content-save-edit</v-icon>
           </v-btn>
 
           <v-btn value="nearby" v-on="on" v-if="content !== original">
@@ -110,8 +110,8 @@ export default {
         .get(`http://${config.SESSION_ADDR}/create`)
         .then(result => this.openConnection(result.data, true));
     },
-    // TODO : Make a text box so that ppl who want na join the session 
-    // can paste the sessoin id into 
+    // TODO : Make a text box so that ppl who want na join the session
+    // can paste the sessoin id into
     joinSession: function (path) {
       if (this.socket !== null){
         this.socket.removeAllListeners()
