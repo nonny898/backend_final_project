@@ -23,7 +23,7 @@ export default {
   },
   created() {
     this.currentRoute = this.$router.currentRoute.name;
-    console.log('Log: created -> this.currentRoute', this.$router.path);
+    console.log('Log: created -> this.currentRoute', this.$router.currentRoute);
     this.username = this.$cookies.get("username");
   },
   methods: {

@@ -18,6 +18,7 @@
             <v-icon>mdi-access-point-network-off</v-icon>
           </v-btn>
           <v-btn v-if="connected" dark @click="snackbar = true">Show Session ID</v-btn>
+          <v-btn v-if="didCreate === 1" dark @click="closeSession()">Close Session</v-btn>
         </v-col>
 
         <v-col style="display: flex;justify-content: center;">
@@ -162,7 +163,8 @@ export default {
       newFileName: "",
       dialogFile: false,
       temp: false,
-      snackbar: false
+      snackbar: false,
+      didCreate: 0
     };
   },
   created() {
@@ -194,19 +196,20 @@ export default {
   components: {
     editor: require("vue2-ace-editor")
   },
-  beforeRouteLeave(to,from,next){
-    this.disconnect()
-    next()
+  beforeRouteLeave(to, from, next) {
+    this.disconnect();
+    next();
   },
   methods: {
     createSession: function() {
       console.log("Creating request to make session");
       axios
         .get(`http://${config.SESSION_ADDR}/create`, {
-          headers: { userId: this.$cookies.userId }
+          headers: { userId: this.$cookies.get("userId") }
         })
         .then(result => {
           console.log("shit", result.data);
+          this.didCreate = 1;
           this.openConnection(result.data, true);
         });
     },
@@ -221,11 +224,10 @@ export default {
       this.users = 0;
       this.sessionId = "";
       this.connected = false;
-      if (this.rga)
-        this.rga.unsubscribe();
-      if(this.socket)
-        this.socket.disconnect(true);
-      console.log("Disconnected")
+      this.didCreate = 0;
+      if (this.rga) this.rga.unsubscribe();
+      if (this.socket) this.socket.disconnect(true);
+      console.log("Disconnected");
     },
     openConnection: function(sessionId, isCreator) {
       if (this.connected) {
@@ -257,10 +259,10 @@ export default {
           this.rga.receive(op);
           console.log(op);
         });
-        this.socket.on("gtfo",status => {
+        this.socket.on("gtfo", status => {
           //TODO Do something with this status
-          this.disconnect()
-        })
+          this.disconnect();
+        });
         if (!isCreator)
           this.socket.emit("message", {
             type: "historyRequest"
@@ -292,6 +294,21 @@ export default {
       this.$cookies.remove("filePath");
       this.disconnect();
       this.$router.push("/");
+    },
+    closeSession() {
+      const userId = this.$cookies.get("userId")
+      console.log('Log: closeSession -> userId', userId);
+      axios
+        .post(`http://${config.SESSION_ADDR}/close`, {
+          session: this.sessionId,
+          userId: this.$cookies.get("userId")
+        })
+        .then(() => {
+          this.users = 0;
+          this.sessionId = "";
+          this.connected = false;
+          this.didCreate = 0;
+        });
     },
     save() {
       axios

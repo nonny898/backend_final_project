@@ -74,8 +74,10 @@ app.post('/close',(req,res) => {
   if(req.body == undefined){
     res.sendStatus(400)
   }
+
   const id = req.body.userId
   const session = req.body.session
+  console.log('Log: req.body', req.body);
   if(id == undefined || session == undefined){
     res.sendStatus(401)
   }
